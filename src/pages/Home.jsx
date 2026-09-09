@@ -17,11 +17,14 @@ import { destinations } from '../data/destinations'
 import { tours, categories } from '../data/tours'
 import { stories } from '../data/stories'
 import { stats } from '../data/misc'
+import { offers } from '../data/offers'
 import { images } from '../lib/images'
 
 const FEATURED_DESTINATIONS = destinations.slice(0, 6)
 const FEATURED_TOURS = [...tours].sort((a, b) => b.rating - a.rating).slice(0, 6)
 const LATEST_STORIES = stories.slice(0, 3)
+const ACTIVE_OFFERS = offers.filter((o) => new Date(o.expiresAt) > new Date())
+const FEATURED_OFFER = ACTIVE_OFFERS.find((o) => o.featured) || ACTIVE_OFFERS[0] || offers[0]
 
 const CATEGORY_META = {
   Trekking: { blurb: 'Ridgelines, passes and summit mornings', image: images.hero('cat-trekking', 900) },
@@ -254,13 +257,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Offers teaser */}
+      {/* Offers teaser — reflects whichever real, live offer is currently featured */}
       <section className="py-8">
         <Container>
           <Reveal>
             <Link
               to="/offers"
-              className="sweep-loop bg-gradient-move group relative flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 px-6 py-5 text-center text-white shadow-[0_10px_30px_-10px_rgba(19,97,224,0.5)] transition-shadow duration-300 hover:shadow-[0_16px_40px_-10px_rgba(19,97,224,0.65)] sm:flex-row sm:justify-between sm:text-left"
+              className={`sweep-loop bg-gradient-move group relative flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-r ${FEATURED_OFFER.gradient} px-6 py-5 text-center text-white shadow-[0_10px_30px_-10px_rgba(19,97,224,0.5)] transition-shadow duration-300 hover:shadow-[0_16px_40px_-10px_rgba(19,97,224,0.65)] sm:flex-row sm:justify-between sm:text-left`}
             >
               <div className="relative flex items-center gap-3">
                 <motion.span
@@ -268,11 +271,13 @@ export default function Home() {
                   transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
                   className="text-2xl"
                 >
-                  🔥
+                  {FEATURED_OFFER.sparkle ? '🪔' : '🔥'}
                 </motion.span>
                 <div>
-                  <p className="font-display text-lg font-extrabold">Winter Sale is live — up to 20% off</p>
-                  <p className="text-sm text-white/85">Flash codes, group discounts and early-bird pricing, all working right now.</p>
+                  <p className="font-display text-lg font-extrabold">
+                    {FEATURED_OFFER.title} — code {FEATURED_OFFER.code}
+                  </p>
+                  <p className="text-sm text-white/85">{FEATURED_OFFER.subtitle}</p>
                 </div>
               </div>
               <span className="relative inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-ink-900 transition-transform duration-300 group-hover:scale-105">

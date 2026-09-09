@@ -3,6 +3,31 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Countdown } from './Countdown'
 
+const SPARKLE_POSITIONS = [
+  { top: '12%', left: '18%', delay: 0 },
+  { top: '22%', left: '82%', delay: 0.4 },
+  { top: '68%', left: '90%', delay: 0.8 },
+  { top: '78%', left: '10%', delay: 1.2 },
+  { top: '45%', left: '55%', delay: 1.6 },
+  { top: '15%', left: '48%', delay: 2.0 },
+]
+
+function Sparkles() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {SPARKLE_POSITIONS.map((s, i) => (
+        <motion.span
+          key={i}
+          className="absolute size-1.5 rounded-full bg-amber-200"
+          style={{ top: s.top, left: s.left, boxShadow: '0 0 8px 2px rgba(253,230,138,0.9)' }}
+          animate={{ opacity: [0, 1, 0], scale: [0.6, 1.3, 0.6] }}
+          transition={{ duration: 2.2, repeat: Infinity, delay: s.delay, ease: 'easeInOut' }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function OfferCard({ offer }) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
@@ -26,10 +51,11 @@ export function OfferCard({ offer }) {
     >
       <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-white/10 blur-2xl" />
       <div className="pointer-events-none absolute -bottom-14 -left-10 size-40 rounded-full bg-white/10 blur-2xl" />
+      {offer.sparkle && <Sparkles />}
 
       <div className="relative">
-        <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur-sm">
-          {offer.badge}
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur-sm">
+          {offer.sparkle && '🪔'} {offer.badge}
         </span>
         <h3 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">{offer.title}</h3>
         <p className="mt-1 text-white/90">{offer.subtitle}</p>

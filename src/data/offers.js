@@ -8,7 +8,27 @@ function daysFromNow(days) {
   return d.toISOString()
 }
 
+function untilDiwali() {
+  // Diwali 2026 falls on 8 Nov 2026 — the sale runs through Diwali day itself.
+  return new Date('2026-11-08T23:59:59+05:30').toISOString()
+}
+
 export const offers = [
+  {
+    id: 'o0',
+    code: 'DIWALI2026',
+    title: 'Diwali Special Sale',
+    subtitle: '18% off every festive-season departure',
+    description: "Book your Diwali getaway now — 18% off any expedition departing Oct–Nov, capped at ₹5,000. Our biggest discount of the year.",
+    discountType: 'percent',
+    discountValue: 18,
+    maxDiscount: 5000,
+    expiresAt: untilDiwali(),
+    gradient: 'from-red-700 via-orange-600 to-amber-500',
+    badge: 'Diwali Sale',
+    featured: true,
+    sparkle: true,
+  },
   {
     id: 'o1',
     code: 'EARLYBIRD500',
@@ -95,6 +115,10 @@ export function evaluateOffer(offer, { subtotal, travelers, date }) {
   if (offer.code === 'EARLYBIRD500' && date) {
     const days = (new Date(date) - new Date()) / (1000 * 60 * 60 * 24)
     if (days < 30) return { valid: false, reason: 'Departure date must be 30+ days away' }
+  }
+  if (offer.code === 'DIWALI2026' && date) {
+    const month = new Date(date).getMonth() // 0-indexed: 9 = Oct, 10 = Nov
+    if (month !== 9 && month !== 10) return { valid: false, reason: 'Only valid for trips departing in October or November' }
   }
 
   let discount = offer.discountType === 'percent' ? Math.round(subtotal * (offer.discountValue / 100)) : offer.discountValue
