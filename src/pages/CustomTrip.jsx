@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Container } from '../components/ui/States'
 import { Field, Input, Select, Textarea } from '../components/ui/Field'
@@ -29,12 +29,17 @@ const today = new Date().toISOString().split('T')[0]
 
 export default function CustomTrip() {
   useSeo({ title: 'Custom Trip Planner', description: 'Build a fully personalised Himalayan itinerary — tell us your destination, dates, budget and style, and our trip designers take it from there.' })
+  // A journey picked on the Trip Atlas arrives as ?destination=… and ?tripType=…
+  const [params] = useSearchParams()
+  const presetDestination = params.get('destination') || ''
+  const presetTripType = params.get('tripType') || ''
+
   const [step, setStep] = useState(0)
-  const [destination, setDestination] = useState('')
+  const [destination, setDestination] = useState(presetDestination)
   const [tripStart, setTripStart] = useState('')
   const [tripEnd, setTripEnd] = useState('')
   const [travelers, setTravelers] = useState(2)
-  const [tripType, setTripType] = useState('')
+  const [tripType, setTripType] = useState(TRIP_TYPES.includes(presetTripType) ? presetTripType : '')
   const [hotelPreference, setHotelPreference] = useState(HOTEL_PREFS[0])
   const [transportPreference, setTransportPreference] = useState(TRANSPORT_PREFS[0])
   const [budgetBand, setBudgetBand] = useState('')
@@ -164,6 +169,12 @@ export default function CustomTrip() {
                 <Field label="Where do you want to go?" htmlFor="destination" error={errors.destination}>
                   <Select id="destination" value={destination} onChange={(e) => setDestination(e.target.value)}>
                     <option value="">Select a destination</option>
+                    {/* A journey chosen on the Trip Atlas may not be one of the
+                        featured destinations — keep it selectable rather than
+                        silently dropping what the traveller picked. */}
+                    {presetDestination && !destinations.some((d) => d.name === presetDestination) && (
+                      <option value={presetDestination}>{presetDestination}</option>
+                    )}
                     {destinations.map((d) => (
                       <option key={d.slug} value={d.name}>
                         {d.name}

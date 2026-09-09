@@ -37,6 +37,29 @@ Supabase (Postgres 17 + GoTrue auth + Row Level Security) · deployed on Vercel.
   "Ask a Question" and "Add to Compare".
 - Related trips from the same destination.
 
+### Trip Atlas — interactive 3D globe
+- `/atlas` — the full departure list (75 journeys, 10 regions, 3 countries) plotted
+  on a real WebGL globe built with three.js: actual world coastlines drawn from
+  Natural Earth outline data, a latitude/longitude graticule, and a fresnel
+  atmosphere glow.
+- Drag to spin with momentum; it auto-rotates when idle and holds still while your
+  pointer is on it so a marker can be aimed at.
+- One marker per journey, coloured by region. Hover or tap one and the panel names
+  the journey; tap it and the globe spins that marker to the front and scrolls the
+  matching card into view.
+- Filtering by region or trip type updates the globe and the list together, and
+  zooms the globe in on the region.
+- Search across every journey name, region and description.
+- Each journey card shows its grade, maximum altitude and season where those are
+  known, and an Enquire button that carries the journey (and its trip type) into the
+  Custom Trip Planner.
+- The globe respects `prefers-reduced-motion` (no auto-spin, no pulsing), and
+  three.js is lazy-loaded so only this page pays for it.
+- Journey coordinates, altitudes, grades and seasons are geographic facts. Prices
+  and fixed departure dates are deliberately **not** shown — they are commercial
+  decisions, so every journey reads "Dates & price on request" and routes into the
+  planner.
+
 ### Trip comparison
 - Add up to 4 trips from any trip card or trip page.
 - Floating compare bar shows the current selection anywhere on the site.

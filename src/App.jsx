@@ -24,6 +24,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const Plan = lazy(() => import('./pages/Plan'))
 const CustomTrip = lazy(() => import('./pages/CustomTrip'))
 const Compare = lazy(() => import('./pages/Compare'))
+const Atlas = lazy(() => import('./pages/Atlas'))
 const Login = lazy(() => import('./pages/Login'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Account = lazy(() => import('./pages/Account'))
@@ -75,6 +76,7 @@ function AnimatedRoutes() {
         <Route path="/plan" element={<PageTransition><Plan /></PageTransition>} />
         <Route path="/custom-trip" element={<PageTransition><CustomTrip /></PageTransition>} />
         <Route path="/compare" element={<PageTransition><Compare /></PageTransition>} />
+        <Route path="/atlas" element={<PageTransition><Atlas /></PageTransition>} />
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/account" element={<PageTransition><Account /></PageTransition>} />

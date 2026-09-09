@@ -10,6 +10,7 @@ const LINKS = [
   { to: '/destinations', label: 'Destinations' },
   { to: '/experiences', label: 'Experiences' },
   { to: '/tours', label: 'Expeditions' },
+  { to: '/atlas', label: 'Atlas' },
   { to: '/offers', label: 'Offers', badge: true },
   { to: '/journal', label: 'Journal' },
   { to: '/about', label: 'About' },
@@ -33,7 +34,7 @@ function AccountMenu() {
 
   if (!user) {
     return (
-      <Link to="/login" className="rounded-full px-4 py-2 text-sm font-semibold text-ink-700 hover:bg-mist-100">
+      <Link to="/login" className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-ink-700 hover:bg-mist-100">
         Log In
       </Link>
     )
