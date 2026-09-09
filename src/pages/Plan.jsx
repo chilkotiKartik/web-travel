@@ -8,6 +8,7 @@ import { submitBooking } from '../lib/api'
 import { tours } from '../data/tours'
 import { getDestinationBySlug } from '../data/destinations'
 import { getOfferByCode, evaluateOffer } from '../data/offers'
+import { useAuth } from '../context/AuthContext'
 
 const STEPS = ['Trip', 'Details', 'You', 'Review']
 
@@ -29,7 +30,8 @@ export default function Plan() {
   const [travelers, setTravelers] = useState(2)
   const [date, setDate] = useState('')
   const [sharing, setSharing] = useState('twin')
-  const [contact, setContact] = useState({ name: '', email: '', phone: '', notes: '' })
+  const { user } = useAuth()
+  const [contact, setContact] = useState({ name: user?.name || '', email: user?.email || '', phone: '', notes: '' })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [submitError, setSubmitError] = useState('')

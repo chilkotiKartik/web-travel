@@ -14,7 +14,7 @@ export function TiltCard({ children, className = '', maxTilt = 6 }) {
   const rotateY = useTransform(springX, [0, 1], [-maxTilt, maxTilt])
 
   if (reduced) {
-    return <div className={className}>{children}</div>
+    return <div className={`group relative ${className}`}>{children}</div>
   }
 
   function handleMove(e) {
@@ -35,7 +35,7 @@ export function TiltCard({ children, className = '', maxTilt = 6 }) {
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
       style={{ rotateX, rotateY, transformPerspective: 800 }}
-      className={className}
+      className={`group relative ${className}`}
     >
       {children}
     </motion.div>

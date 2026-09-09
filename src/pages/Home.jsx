@@ -11,6 +11,7 @@ import { TourCard } from '../components/TourCard'
 import { StoryCard } from '../components/StoryCard'
 import { TestimonialsSection } from '../components/TestimonialsSection'
 import { NewsletterForm } from '../components/NewsletterForm'
+import { CircularIconRow } from '../components/CircularIconRow'
 import { destinations } from '../data/destinations'
 import { tours, categories } from '../data/tours'
 import { stories } from '../data/stories'
@@ -189,6 +190,19 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+        </Container>
+      </section>
+
+      {/* Circular quick links */}
+      <section className="py-8">
+        <Container>
+          <CircularIconRow
+            items={[
+              { label: 'Offers', to: '/offers', emoji: '🔥' },
+              ...destinations.slice(0, 4).map((d) => ({ label: d.name, to: `/destinations/${d.slug}`, image: d.heroImage })),
+              { label: 'Journal', to: '/journal', emoji: '📔' },
+            ]}
+          />
         </Container>
       </section>
 

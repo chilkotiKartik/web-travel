@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Container } from './ui/States'
 import { Button } from './ui/Button'
+import { useAuth } from '../context/AuthContext'
 
 const LINKS = [
   { to: '/destinations', label: 'Destinations' },
@@ -14,8 +15,73 @@ const LINKS = [
   { to: '/contact', label: 'Contact' },
 ]
 
+function AccountMenu() {
+  const { user, logOut } = useAuth()
+  const navigate = useNavigate()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    function onClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [])
+
+  if (!user) {
+    return (
+      <Link to="/login" className="rounded-full px-4 py-2 text-sm font-semibold text-ink-700 hover:bg-mist-100">
+        Log In
+      </Link>
+    )
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setMenuOpen((o) => !o)}
+        aria-label="Account menu"
+        aria-expanded={menuOpen}
+        className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500 font-display text-sm font-extrabold text-white transition-transform hover:scale-105"
+      >
+        {user.name.charAt(0).toUpperCase()}
+      </button>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-12 w-48 overflow-hidden rounded-2xl border border-ink-900/8 bg-white py-2 shadow-[0_16px_40px_-12px_rgba(16,24,40,0.25)]"
+          >
+            <p className="truncate px-4 py-2 text-xs text-ink-500">{user.email}</p>
+            <Link to="/account" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-ink-700 hover:bg-mist-100">
+              My Bookings
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false)
+                logOut()
+                navigate('/')
+              }}
+              className="block w-full px-4 py-2.5 text-left text-sm font-medium text-red-600 hover:bg-red-50"
+            >
+              Log Out
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 export function Navbar() {
   const { pathname } = useLocation()
+  const { user, logOut } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -72,7 +138,8 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <AccountMenu />
           <Button to="/plan" size="sm">
             Plan a Trip
           </Button>
@@ -126,7 +193,29 @@ export function Navbar() {
                 </NavLink>
               ))}
             </nav>
-            <Button to="/plan" className="mt-5 w-full">
+            {user ? (
+              <div className="mt-4 flex items-center justify-between rounded-2xl bg-mist-100 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-ink-900">{user.name}</p>
+                  <Link to="/account" className="text-xs font-medium text-blue-600">
+                    My Bookings
+                  </Link>
+                </div>
+                <button type="button" onClick={logOut} className="shrink-0 text-sm font-semibold text-red-600">
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 flex gap-2">
+                <Link to="/login" className="flex-1 rounded-full border border-ink-900/15 py-2.5 text-center text-sm font-semibold text-ink-900">
+                  Log In
+                </Link>
+                <Link to="/signup" className="flex-1 rounded-full bg-mist-100 py-2.5 text-center text-sm font-semibold text-ink-900">
+                  Sign Up
+                </Link>
+              </div>
+            )}
+            <Button to="/plan" className="mt-3 w-full">
               Plan a Trip
             </Button>
           </motion.div>

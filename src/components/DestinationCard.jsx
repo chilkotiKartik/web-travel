@@ -6,8 +6,9 @@ import { TiltCard } from './ui/TiltCard'
 export function DestinationCard({ destination, className = '', priority = false }) {
   return (
     <TiltCard className={className} maxTilt={4}>
-    <Link to={`/destinations/${destination.slug}`} className="group block h-full">
-      <motion.div whileHover="hover" className="relative overflow-hidden rounded-2xl">
+    <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-green-500 via-blue-500 to-green-500 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-40" />
+    <Link to={`/destinations/${destination.slug}`} className="group relative block h-full">
+      <motion.div whileHover="hover" className="relative overflow-hidden rounded-2xl ring-1 ring-ink-900/6 transition-all duration-300 group-hover:ring-2 group-hover:ring-white">
         <Img
           src={destination.heroImage}
           alt={destination.name}

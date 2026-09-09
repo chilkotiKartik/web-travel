@@ -13,9 +13,10 @@ export function TourCard({ tour, className = '' }) {
   const destination = getDestinationBySlug(tour.destinationSlug)
   return (
     <TiltCard className={className} maxTilt={4}>
+    <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-40" />
     <Link
       to={`/tours/${tour.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(11,14,26,0.06)] ring-1 ring-navy-900/6 transition-shadow hover:shadow-xl"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(11,14,26,0.06)] ring-1 ring-navy-900/6 transition-shadow duration-300 hover:shadow-xl"
     >
       <div className="relative">
         <Img src={tour.heroImage} alt={tour.title} className="aspect-[4/3]" imgClassName="transition-transform duration-700 group-hover:scale-105" />
