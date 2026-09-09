@@ -30,10 +30,12 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <span className="flex size-9 items-center justify-center rounded-full bg-white font-display text-lg font-bold text-navy-950">
+              <span className="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-green-500 font-display text-lg font-extrabold text-white">
                 W
               </span>
-              <span className="font-display text-lg font-bold text-white">Wayfare</span>
+              <span className="font-display text-lg font-extrabold text-white">
+                Way<span className="text-green-500">fare</span>
+              </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               India's premium adventure travel company — handpicked treks, expeditions and journeys, run by people who've

@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Poppins", system-ui, sans-serif;
+  --font-sans: "Poppins", system-ui, sans-serif;
 
   --color-navy-950: #060a3d;
   --color-navy-900: #0a1152;
   --color-navy-800: #101c6e;
   --color-navy-700: #16278c;
 
-  --color-blue-600: #0140ac;
-  --color-blue-500: #1a56c9;
-  --color-blue-100: #e3ecfb;
+  --color-blue-600: #1361e0;
+  --color-blue-500: #2f7bff;
+  --color-blue-100: #dbeaff;
 
-  --color-green-600: #24981c;
-  --color-green-500: #4ebe38;
-  --color-green-100: #e7f7e3;
+  --color-green-600: #2fa524;
+  --color-green-500: #52c93c;
+  --color-green-100: #e5f9df;
 
-  --color-sand-50: #faf9f6;
-  --color-mist-100: #f0f0f0;
+  --color-sand-50: #ffffff;
+  --color-mist-100: #f2f6fb;
 
-  --color-ink-900: #0b0e1a;
-  --color-ink-700: #3a3d4a;
-  --color-ink-500: #6b6e7a;
+  --color-ink-900: #16181d;
+  --color-ink-700: #3f434c;
+  --color-ink-500: #6b7280;
 
   --animate-marquee: marquee 32s linear infinite;
 }

@@ -5,6 +5,7 @@ import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { ScrollToTop } from './components/ScrollToTop'
 import { PageTransition } from './components/PageTransition'
+import { FloatingContact } from './components/FloatingContact'
 
 const Home = lazy(() => import('./pages/Home'))
 const Destinations = lazy(() => import('./pages/Destinations'))
@@ -63,6 +64,7 @@ function App() {
         </Suspense>
       </main>
       <Footer />
+      <FloatingContact />
     </div>
   )
 }

@@ -91,7 +91,7 @@ export default function DestinationDetail() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-10">
-              <h2 className="font-display text-xl font-semibold text-navy-950">Highlights</h2>
+              <h2 className="font-display text-xl font-semibold text-ink-900">Highlights</h2>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {destination.highlights.map((h) => (
                   <li key={h} className="flex items-start gap-2 text-sm text-ink-700">
@@ -114,15 +114,15 @@ export default function DestinationDetail() {
               <dl className="space-y-4 text-sm">
                 <div className="flex justify-between gap-4">
                   <dt className="text-ink-500">Best season</dt>
-                  <dd className="font-medium text-navy-950">{destination.bestSeason}</dd>
+                  <dd className="font-medium text-ink-900">{destination.bestSeason}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ink-500">Climate</dt>
-                  <dd className="text-right font-medium text-navy-950">{destination.climate}</dd>
+                  <dd className="text-right font-medium text-ink-900">{destination.climate}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ink-500">Trips available</dt>
-                  <dd className="font-medium text-navy-950">{toursQuery.data?.length ?? '—'}</dd>
+                  <dd className="font-medium text-ink-900">{toursQuery.data?.length ?? '—'}</dd>
                 </div>
               </dl>
               <Button to={`/tours?destination=${destination.slug}`} className="mt-5 w-full">
@@ -141,7 +141,7 @@ export default function DestinationDetail() {
         <Container>
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Trips here</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
               Expeditions in {destination.name}
             </h2>
           </Reveal>

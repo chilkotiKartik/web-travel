@@ -16,9 +16,9 @@ export function Accordion({ items, defaultOpen = 0 }) {
               aria-expanded={isOpen}
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
             >
-              <span className="font-display text-base font-semibold text-navy-950">{item.title}</span>
+              <span className="font-display text-base font-semibold text-ink-900">{item.title}</span>
               <span
-                className={`flex size-7 shrink-0 items-center justify-center rounded-full bg-navy-900/5 text-navy-950 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
+                className={`flex size-7 shrink-0 items-center justify-center rounded-full bg-navy-900/5 text-ink-900 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
               >
                 +
               </span>

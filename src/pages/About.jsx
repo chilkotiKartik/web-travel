@@ -5,18 +5,16 @@ import { Button } from '../components/ui/Button'
 import { Img } from '../components/ui/Img'
 import { TestimonialsSection } from '../components/TestimonialsSection'
 import { team, stats } from '../data/misc'
-import { images } from '../lib/images'
 import { motion } from 'framer-motion'
 
 export default function About() {
   return (
     <>
-      <section className="relative flex h-[60vh] min-h-96 items-end overflow-hidden bg-navy-950">
-        <img src={images.hero('about-hero', 1800, 80)} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
-        <Container className="relative pb-14 pt-32">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-500">About Wayfare</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-14 pt-32">
+        <div className="pointer-events-none absolute -right-16 top-10 size-72 rounded-full bg-green-500/15 blur-3xl" />
+        <Container className="relative">
+          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">About Wayfare</p>
+          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
             We started this because a spreadsheet trek changed our lives
           </h1>
         </Container>
@@ -26,7 +24,7 @@ export default function About() {
         <Container className="grid gap-12 lg:grid-cols-2">
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Our story</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
               Built by trekkers, not tour operators
             </h2>
           </Reveal>
@@ -50,7 +48,7 @@ export default function About() {
         </Container>
       </section>
 
-      <section className="bg-navy-950 py-16 text-white sm:py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-green-600 py-16 text-white sm:py-20">
         <Container>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {stats.map((s) => (
@@ -69,7 +67,7 @@ export default function About() {
         <Container>
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">The team</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
               The people planning your next trip
             </h2>
           </Reveal>
@@ -77,7 +75,7 @@ export default function About() {
             {team.map((member) => (
               <motion.div key={member.id} variants={staggerItem} className="rounded-2xl bg-white p-5 ring-1 ring-navy-900/6">
                 <Img src={member.image} alt={member.name} className="aspect-square rounded-xl" />
-                <h3 className="mt-4 font-display text-lg font-semibold text-navy-950">{member.name}</h3>
+                <h3 className="mt-4 font-display text-lg font-semibold text-ink-900">{member.name}</h3>
                 <p className="text-sm font-medium text-blue-600">{member.role}</p>
                 <p className="mt-2 text-sm text-ink-500">{member.bio}</p>
               </motion.div>
@@ -90,7 +88,7 @@ export default function About() {
         <Container>
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Trail talk</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">In their words</h2>
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">In their words</h2>
           </Reveal>
           <Reveal delay={0.1} className="mt-10">
             <TestimonialsSection />
@@ -101,7 +99,7 @@ export default function About() {
       <section className="py-16 text-center sm:py-24">
         <Container>
           <Reveal>
-            <h2 className="text-balance mx-auto max-w-xl font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+            <h2 className="text-balance mx-auto max-w-xl font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
               Ready to trade your commute for a mountain pass?
             </h2>
             <Button to="/plan" size="lg" className="mt-8">

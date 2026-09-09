@@ -11,7 +11,6 @@ import { useDebounce } from '../hooks/useDebounce'
 import { fetchTours } from '../lib/api'
 import { categories, difficulties } from '../data/tours'
 import { destinations } from '../data/destinations'
-import { images } from '../lib/images'
 
 const SORTS = [
   { id: 'popular', label: 'Most Popular' },
@@ -78,12 +77,11 @@ export default function Tours() {
 
   return (
     <>
-      <section className="relative flex h-[46vh] min-h-80 items-end overflow-hidden bg-navy-950">
-        <img src={images.hero('tours-hero', 1800, 80)} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
-        <Container className="relative pb-12 pt-32">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-500">Expeditions</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-12 pt-32">
+        <div className="pointer-events-none absolute -left-16 top-0 size-72 rounded-full bg-blue-500/15 blur-3xl" />
+        <Container className="relative">
+          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Expeditions</p>
+          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
             {activeDestination ? `Trips in ${activeDestination.name}` : 'Find your next trail'}
           </h1>
         </Container>

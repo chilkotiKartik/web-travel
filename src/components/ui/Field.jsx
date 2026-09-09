@@ -1,7 +1,7 @@
 export function Field({ label, htmlFor, error, hint, children, className = '' }) {
   return (
     <div className={className}>
-      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-navy-950">
+      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-ink-900">
         {label}
       </label>
       {children}
@@ -17,7 +17,7 @@ export function Field({ label, htmlFor, error, hint, children, className = '' })
 }
 
 const baseInput =
-  'w-full rounded-xl border bg-white px-4 py-2.5 text-[15px] text-navy-950 placeholder:text-ink-500/60 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/30'
+  'w-full rounded-xl border bg-white px-4 py-2.5 text-[15px] text-ink-900 placeholder:text-ink-500/60 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/30'
 
 export function Input({ error, className = '', ...rest }) {
   return (

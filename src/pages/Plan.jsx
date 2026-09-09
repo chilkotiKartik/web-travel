@@ -103,35 +103,35 @@ export default function Plan() {
     return (
       <Container className="flex min-h-[70vh] flex-col items-center justify-center py-24 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-green-500 text-3xl text-white">✓</div>
-        <h1 className="mt-6 font-display text-3xl font-bold text-navy-950 sm:text-4xl">Your spot is booked</h1>
+        <h1 className="mt-6 font-display text-3xl font-bold text-ink-900 sm:text-4xl">Your spot is booked</h1>
         <p className="mt-3 max-w-md text-ink-700">
-          Booking <span className="font-semibold text-navy-950">#{booking.id}</span> confirmed for {selectedTour.title}. A
+          Booking <span className="font-semibold text-ink-900">#{booking.id}</span> confirmed for {selectedTour.title}. A
           confirmation has been logged to your account — our team will email {contact.email} with payment and gear details
           within one business day.
         </p>
         <div className="mt-8 grid w-full max-w-sm gap-3 rounded-2xl border border-navy-900/8 bg-white p-6 text-left text-sm">
           <div className="flex justify-between">
             <span className="text-ink-500">Trip</span>
-            <span className="font-medium text-navy-950">{selectedTour.title}</span>
+            <span className="font-medium text-ink-900">{selectedTour.title}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-ink-500">Preferred date</span>
-            <span className="font-medium text-navy-950">{date}</span>
+            <span className="font-medium text-ink-900">{date}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-ink-500">Travellers</span>
-            <span className="font-medium text-navy-950">{travelers}</span>
+            <span className="font-medium text-ink-900">{travelers}</span>
           </div>
           <div className="flex justify-between border-t border-navy-900/8 pt-3">
             <span className="text-ink-500">Total (est.)</span>
-            <span className="font-semibold text-navy-950">{formatPrice(total)}</span>
+            <span className="font-semibold text-ink-900">{formatPrice(total)}</span>
           </div>
         </div>
         <div className="mt-8 flex gap-3">
-          <Link to="/tours" className="rounded-full bg-navy-950 px-6 py-3 text-sm font-semibold text-white hover:bg-navy-800">
+          <Link to="/tours" className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-navy-800">
             Browse More Trips
           </Link>
-          <Link to="/" className="rounded-full border border-navy-900/15 px-6 py-3 text-sm font-semibold text-navy-950 hover:bg-navy-900/5">
+          <Link to="/" className="rounded-full border border-navy-900/15 px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-navy-900/5">
             Back to Home
           </Link>
         </div>
@@ -143,7 +143,7 @@ export default function Plan() {
     <section className="py-16 sm:py-24">
       <Container className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Plan a Trip</p>
-        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
           Four short steps to your next departure
         </h1>
 
@@ -153,12 +153,12 @@ export default function Plan() {
             <div key={label} className="flex flex-1 items-center gap-2">
               <div
                 className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
-                  i < step ? 'bg-green-500 text-navy-950' : i === step ? 'bg-navy-950 text-white' : 'bg-navy-900/10 text-ink-500'
+                  i < step ? 'bg-green-500 text-ink-900' : i === step ? 'bg-blue-600 text-white' : 'bg-navy-900/10 text-ink-500'
                 }`}
               >
                 {i < step ? '✓' : i + 1}
               </div>
-              <span className={`hidden text-sm font-medium sm:inline ${i === step ? 'text-navy-950' : 'text-ink-500'}`}>{label}</span>
+              <span className={`hidden text-sm font-medium sm:inline ${i === step ? 'text-ink-900' : 'text-ink-500'}`}>{label}</span>
               {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? 'bg-green-500' : 'bg-navy-900/10'}`} />}
             </div>
           ))}
@@ -191,7 +191,7 @@ export default function Plan() {
                     >
                       <Img src={t.heroImage} alt="" className="size-16 shrink-0 rounded-lg" />
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-navy-950">{t.title}</p>
+                        <p className="truncate text-sm font-semibold text-ink-900">{t.title}</p>
                         <p className="text-xs text-ink-500">
                           {t.duration}D/{t.nights}N · {t.difficulty}
                         </p>
@@ -209,7 +209,7 @@ export default function Plan() {
                 <div className="flex items-center gap-3 rounded-xl border border-navy-900/8 bg-white p-3">
                   <Img src={selectedTour.heroImage} alt="" className="size-14 rounded-lg" />
                   <div>
-                    <p className="text-sm font-semibold text-navy-950">{selectedTour.title}</p>
+                    <p className="text-sm font-semibold text-ink-900">{selectedTour.title}</p>
                     <button type="button" onClick={() => setStep(0)} className="text-xs font-medium text-blue-600 hover:underline">
                       Change trip
                     </button>
@@ -288,7 +288,7 @@ export default function Plan() {
                   <div className="flex gap-4">
                     <Img src={selectedTour.heroImage} alt="" className="size-20 shrink-0 rounded-xl" />
                     <div>
-                      <p className="font-display text-lg font-semibold text-navy-950">{selectedTour.title}</p>
+                      <p className="font-display text-lg font-semibold text-ink-900">{selectedTour.title}</p>
                       <p className="text-sm text-ink-500">{selectedDestination?.name}</p>
                     </div>
                   </div>
@@ -302,12 +302,12 @@ export default function Plan() {
                     ].map(([label, value]) => (
                       <div key={label} className="flex justify-between gap-4">
                         <dt className="text-ink-500">{label}</dt>
-                        <dd className="text-right font-medium capitalize text-navy-950">{value}</dd>
+                        <dd className="text-right font-medium capitalize text-ink-900">{value}</dd>
                       </div>
                     ))}
                     <div className="flex justify-between border-t border-navy-900/8 pt-3">
-                      <dt className="font-semibold text-navy-950">Total (est.)</dt>
-                      <dd className="font-display text-lg font-bold text-navy-950">{formatPrice(total)}</dd>
+                      <dt className="font-semibold text-ink-900">Total (est.)</dt>
+                      <dd className="font-display text-lg font-bold text-ink-900">{formatPrice(total)}</dd>
                     </div>
                   </dl>
                 </div>
@@ -326,7 +326,7 @@ export default function Plan() {
             type="button"
             onClick={goBack}
             disabled={step === 0}
-            className="rounded-full border border-navy-900/15 px-6 py-3 text-sm font-semibold text-navy-950 transition-colors hover:bg-navy-900/5 disabled:opacity-0"
+            className="rounded-full border border-navy-900/15 px-6 py-3 text-sm font-semibold text-ink-900 transition-colors hover:bg-navy-900/5 disabled:opacity-0"
           >
             Back
           </button>
@@ -334,7 +334,7 @@ export default function Plan() {
             <button
               type="button"
               onClick={goNext}
-              className="rounded-full bg-navy-950 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
+              className="rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
             >
               Continue
             </button>
@@ -343,7 +343,7 @@ export default function Plan() {
               type="button"
               onClick={handleConfirm}
               disabled={status === 'loading'}
-              className="rounded-full bg-green-500 px-7 py-3 text-sm font-semibold text-navy-950 transition-colors hover:bg-green-600 disabled:opacity-60"
+              className="rounded-full bg-green-500 px-7 py-3 text-sm font-semibold text-ink-900 transition-colors hover:bg-green-600 disabled:opacity-60"
             >
               {status === 'loading' ? 'Confirming…' : 'Confirm Booking'}
             </button>

@@ -33,7 +33,7 @@ export function SearchInput({ value, onChange, placeholder = 'Search…', classN
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="w-full rounded-full border border-navy-900/15 bg-white py-3 pl-11 pr-4 text-sm text-navy-950 outline-none placeholder:text-ink-500/70 focus:border-blue-600"
+        className="w-full rounded-full border border-navy-900/15 bg-white py-3 pl-11 pr-4 text-sm text-ink-900 outline-none placeholder:text-ink-500/70 focus:border-blue-600"
       />
     </div>
   )

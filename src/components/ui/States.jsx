@@ -29,7 +29,7 @@ export function ErrorState({ title = 'Something went wrong', message, onRetry })
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-navy-900/10 bg-white px-6 py-16 text-center">
       <div className="flex size-12 items-center justify-center rounded-full bg-navy-900/5 text-2xl">⚠️</div>
-      <h3 className="font-display text-xl font-semibold text-navy-950">{title}</h3>
+      <h3 className="font-display text-xl font-semibold text-ink-900">{title}</h3>
       {message && <p className="max-w-sm text-sm text-ink-500">{message}</p>}
       {onRetry && (
         <button
@@ -47,7 +47,7 @@ export function EmptyState({ title = 'Nothing here yet', message, action }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-navy-900/15 bg-white/60 px-6 py-16 text-center">
       <div className="flex size-12 items-center justify-center rounded-full bg-green-100 text-2xl">🧭</div>
-      <h3 className="font-display text-xl font-semibold text-navy-950">{title}</h3>
+      <h3 className="font-display text-xl font-semibold text-ink-900">{title}</h3>
       {message && <p className="max-w-sm text-sm text-ink-500">{message}</p>}
       {action}
     </div>

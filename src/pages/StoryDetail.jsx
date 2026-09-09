@@ -62,7 +62,7 @@ export default function StoryDetail() {
           <Reveal className="flex items-center gap-3 border-b border-navy-900/8 pb-8">
             <Img src={story.authorImage} alt="" className="size-12 rounded-full" />
             <div>
-              <p className="text-sm font-semibold text-navy-950">{story.author}</p>
+              <p className="text-sm font-semibold text-ink-900">{story.author}</p>
               <p className="text-xs text-ink-500">
                 {story.authorRole} · {dateFmt.format(new Date(story.date))} · {story.readTime}
               </p>
@@ -92,7 +92,7 @@ export default function StoryDetail() {
           <Container>
             <Reveal>
               <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Keep reading</p>
-              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">More from the journal</h2>
+              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">More from the journal</h2>
             </Reveal>
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {more.map((s) => (

@@ -62,7 +62,7 @@ export default function TourDetail() {
     <div className="space-y-8">
       <p className="text-lg leading-relaxed text-ink-700">{tour.overview}</p>
       <div>
-        <h3 className="font-display text-lg font-semibold text-navy-950">Highlights</h3>
+        <h3 className="font-display text-lg font-semibold text-ink-900">Highlights</h3>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {tour.highlights.map((h) => (
             <li key={h} className="flex items-start gap-2 text-sm text-ink-700">
@@ -87,7 +87,7 @@ export default function TourDetail() {
           <span className="absolute -left-[31px] flex size-6 items-center justify-center rounded-full bg-navy-950 text-[11px] font-bold text-white">
             {day.day}
           </span>
-          <h4 className="font-display text-base font-semibold text-navy-950">{day.title}</h4>
+          <h4 className="font-display text-base font-semibold text-ink-900">{day.title}</h4>
           <p className="mt-1 text-sm leading-relaxed text-ink-700">{day.description}</p>
         </li>
       ))}
@@ -172,7 +172,7 @@ export default function TourDetail() {
                 <div key={stat.label}>
                   <p className="text-lg">{stat.icon}</p>
                   <p className="mt-1 text-xs text-ink-500">{stat.label}</p>
-                  <p className="text-sm font-semibold text-navy-950">{stat.value}</p>
+                  <p className="text-sm font-semibold text-ink-900">{stat.value}</p>
                 </div>
               ))}
             </Reveal>
@@ -192,7 +192,7 @@ export default function TourDetail() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Reveal className="rounded-2xl border border-navy-900/8 bg-white p-6 shadow-sm">
               <p className="text-xs text-ink-500">Starting from</p>
-              <p className="font-display text-3xl font-bold text-navy-950">{formatPrice(tour.price)}</p>
+              <p className="font-display text-3xl font-bold text-ink-900">{formatPrice(tour.price)}</p>
               <p className="text-xs text-ink-500">per person, twin sharing</p>
               <Button onClick={() => navigate(`/plan?tour=${tour.slug}`)} className="mt-5 w-full" size="lg">
                 Book This Trip
@@ -215,7 +215,7 @@ export default function TourDetail() {
           <Container>
             <Reveal>
               <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">More like this</p>
-              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
                 Other trips in {destination?.name}
               </h2>
             </Reveal>

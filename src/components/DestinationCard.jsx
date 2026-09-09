@@ -22,7 +22,7 @@ export function DestinationCard({ destination, className = '', priority = false 
         <motion.span
           variants={{ hover: { opacity: 1, x: 0 }, initial: { opacity: 0, x: -6 } }}
           initial="initial"
-          className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full bg-white/90 text-navy-950"
+          className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full bg-white/90 text-ink-900"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />

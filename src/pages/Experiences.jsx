@@ -37,15 +37,14 @@ const CATEGORY_DETAIL = {
 export default function Experiences() {
   return (
     <>
-      <section className="relative flex h-[52vh] min-h-96 items-end overflow-hidden bg-navy-950">
-        <img src={images.hero('experiences-hero', 1800, 80)} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
-        <Container className="relative pb-14 pt-32">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-500">Experiences</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-14 pt-32">
+        <div className="pointer-events-none absolute -right-20 top-10 size-72 rounded-full bg-green-500/15 blur-3xl" />
+        <Container className="relative">
+          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Experiences</p>
+          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
             Five ways to move through India
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-white/80">
+          <p className="mt-4 max-w-xl text-lg text-ink-500">
             Every trip we run falls into one of five categories. Pick the pace that matches your fitness, time, and appetite
             for discomfort.
           </p>
@@ -68,12 +67,12 @@ export default function Experiences() {
                 </div>
                 <div className={reversed ? '[direction:ltr]' : ''}>
                   <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">{meta.tagline}</p>
-                  <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">{cat}</h2>
+                  <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">{cat}</h2>
                   <p className="mt-4 max-w-md text-ink-700">{meta.description}</p>
                   <p className="mt-4 text-sm text-ink-500">{count} trip{count === 1 ? '' : 's'} currently running</p>
                   <Link
                     to={`/tours?category=${encodeURIComponent(cat)}`}
-                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-navy-950 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
+                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
                   >
                     Browse {cat} trips
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none">

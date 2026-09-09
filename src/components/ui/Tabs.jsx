@@ -23,7 +23,7 @@ export function Tabs({ tabs, defaultTab, className = '' }) {
                 transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
               />
             )}
-            <span className={`relative ${active === tab.id ? 'text-navy-950' : 'text-ink-500'}`}>{tab.label}</span>
+            <span className={`relative ${active === tab.id ? 'text-ink-900' : 'text-ink-500'}`}>{tab.label}</span>
           </button>
         ))}
       </div>

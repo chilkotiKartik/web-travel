@@ -26,7 +26,7 @@ export function TestimonialsSection() {
             <figcaption className="mt-5 flex items-center gap-3">
               <Img src={t.image} alt="" className="size-10 rounded-full" />
               <div>
-                <p className="text-sm font-semibold text-navy-950">{t.name}</p>
+                <p className="text-sm font-semibold text-ink-900">{t.name}</p>
                 <p className="text-xs text-ink-500">{t.trip}</p>
               </div>
             </figcaption>
@@ -38,7 +38,7 @@ export function TestimonialsSection() {
           type="button"
           onClick={() => scrollBy(-360)}
           aria-label="Previous testimonials"
-          className="flex size-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-950 transition-colors hover:bg-navy-900/5"
+          className="flex size-10 items-center justify-center rounded-full border border-navy-900/15 text-ink-900 transition-colors hover:bg-navy-900/5"
         >
           ←
         </button>
@@ -46,7 +46,7 @@ export function TestimonialsSection() {
           type="button"
           onClick={() => scrollBy(360)}
           aria-label="Next testimonials"
-          className="flex size-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-950 transition-colors hover:bg-navy-900/5"
+          className="flex size-10 items-center justify-center rounded-full border border-navy-900/15 text-ink-900 transition-colors hover:bg-navy-900/5"
         >
           →
         </button>

@@ -23,7 +23,7 @@ export function StoryCard({ story, className = '', horizontal = false }) {
           <Badge tone="green">{story.category}</Badge>
           <span className="text-xs text-ink-500">{story.readTime}</span>
         </div>
-        <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-navy-950 group-hover:text-blue-600">
+        <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink-900 group-hover:text-blue-600">
           {story.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm text-ink-500">{story.excerpt}</p>

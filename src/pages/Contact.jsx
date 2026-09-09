@@ -5,7 +5,6 @@ import { Field, Input, Textarea, Select } from '../components/ui/Field'
 import { Accordion } from '../components/ui/Accordion'
 import { submitContactMessage } from '../lib/api'
 import { faqs } from '../data/misc'
-import { images } from '../lib/images'
 
 const SUBJECTS = ['General enquiry', 'Trip customisation', 'Group booking', 'Partnership / press', 'Something else']
 
@@ -50,31 +49,30 @@ export default function Contact() {
 
   return (
     <>
-      <section className="relative flex h-[42vh] min-h-72 items-end overflow-hidden bg-navy-950">
-        <img src={images.hero('contact-hero', 1800, 80)} alt="" className="absolute inset-0 h-full w-full object-cover opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/50 to-transparent" />
-        <Container className="relative pb-12 pt-32">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-500">Contact</p>
-          <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">Talk to a human</h1>
+      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-12 pt-32">
+        <div className="pointer-events-none absolute -left-16 top-0 size-72 rounded-full bg-blue-500/15 blur-3xl" />
+        <Container className="relative">
+          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Contact</p>
+          <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">Talk to a human</h1>
         </Container>
       </section>
 
       <section className="py-16 sm:py-20">
         <Container className="grid gap-14 lg:grid-cols-[1fr_1.3fr]">
           <Reveal>
-            <h2 className="font-display text-2xl font-semibold text-navy-950">Reach us directly</h2>
+            <h2 className="font-display text-2xl font-semibold text-ink-900">Reach us directly</h2>
             <div className="mt-6 space-y-6">
               <div>
                 <p className="text-sm font-semibold text-ink-500">Email</p>
-                <p className="mt-1 text-navy-950">hello@wayfare.example</p>
+                <p className="mt-1 text-ink-900">hello@wayfare.example</p>
               </div>
               <div>
                 <p className="text-sm font-semibold text-ink-500">Phone</p>
-                <p className="mt-1 text-navy-950">+91 98765 43210</p>
+                <p className="mt-1 text-ink-900">+91 98765 43210</p>
               </div>
               <div>
                 <p className="text-sm font-semibold text-ink-500">Studio</p>
-                <p className="mt-1 text-navy-950">
+                <p className="mt-1 text-ink-900">
                   4th Floor, Basecamp House
                   <br />
                   Sector 29, Gurugram, Haryana
@@ -82,7 +80,7 @@ export default function Contact() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-ink-500">Response time</p>
-                <p className="mt-1 text-navy-950">Within one business day, always.</p>
+                <p className="mt-1 text-ink-900">Within one business day, always.</p>
               </div>
             </div>
           </Reveal>
@@ -91,7 +89,7 @@ export default function Contact() {
             {status === 'success' ? (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-green-600/20 bg-green-100 px-8 py-16 text-center">
                 <div className="flex size-14 items-center justify-center rounded-full bg-green-500 text-2xl text-white">✓</div>
-                <h3 className="mt-4 font-display text-2xl font-semibold text-navy-950">Message sent</h3>
+                <h3 className="mt-4 font-display text-2xl font-semibold text-ink-900">Message sent</h3>
                 <p className="mt-2 max-w-sm text-ink-700">
                   Thanks, {values.name.split(' ')[0]}. We'll reply to {values.email} within one business day.
                 </p>
@@ -138,7 +136,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="w-full rounded-full bg-navy-950 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-60 sm:w-auto"
+                  className="w-full rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-60 sm:w-auto"
                 >
                   {status === 'loading' ? 'Sending…' : 'Send Message'}
                 </button>
@@ -152,7 +150,7 @@ export default function Contact() {
         <Container className="max-w-3xl">
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">FAQ</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">Common questions</h2>
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">Common questions</h2>
           </Reveal>
           <Reveal delay={0.1} className="mt-10">
             <Accordion items={faqs.map((f) => ({ id: f.id, title: f.question, content: f.answer }))} defaultOpen={0} />

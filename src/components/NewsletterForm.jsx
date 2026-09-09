@@ -54,13 +54,13 @@ export function NewsletterForm({ variant = 'light', className = '' }) {
           className={`min-w-0 flex-1 rounded-full border px-4 py-2.5 text-sm outline-none transition-colors ${
             dark
               ? 'border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/40'
-              : 'border-navy-900/15 bg-white text-navy-950 placeholder:text-ink-500/60 focus:border-blue-600'
+              : 'border-navy-900/15 bg-white text-ink-900 placeholder:text-ink-500/60 focus:border-blue-600'
           }`}
         />
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="shrink-0 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-navy-950 transition-colors hover:bg-green-600 disabled:opacity-60"
+          className="shrink-0 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-ink-900 transition-colors hover:bg-green-600 disabled:opacity-60"
         >
           {status === 'loading' ? 'Joining…' : 'Join'}
         </button>

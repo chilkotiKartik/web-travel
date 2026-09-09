@@ -18,11 +18,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
-  const isHome = pathname === '/'
-  const transparent = isHome && !scrolled && !open
-
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    const onScroll = () => setScrolled(window.scrollY > 12)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -41,21 +38,17 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        transparent ? 'bg-transparent' : 'bg-sand-50/90 backdrop-blur-md shadow-[0_1px_0_rgba(11,14,26,0.08)]'
+      className={`fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300 ${
+        scrolled ? 'shadow-[0_2px_16px_rgba(16,24,40,0.08)]' : 'shadow-[0_1px_0_rgba(16,24,40,0.06)]'
       }`}
     >
       <Container className="flex h-20 items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-2" aria-label="Wayfare home">
-          <span
-            className={`flex size-9 items-center justify-center rounded-full font-display text-lg font-bold ${
-              transparent ? 'bg-white text-navy-950' : 'bg-navy-950 text-white'
-            }`}
-          >
+          <span className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500 font-display text-lg font-extrabold text-white">
             W
           </span>
-          <span className={`font-display text-lg font-bold tracking-tight ${transparent ? 'text-white' : 'text-navy-950'}`}>
-            Wayfare
+          <span className="font-display text-xl font-extrabold tracking-tight text-ink-900">
+            Way<span className="text-green-500">fare</span>
           </span>
         </Link>
 
@@ -65,14 +58,8 @@ export function Navbar() {
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  transparent
-                    ? isActive
-                      ? 'bg-white/15 text-white'
-                      : 'text-white/85 hover:bg-white/10 hover:text-white'
-                    : isActive
-                      ? 'bg-navy-900/8 text-navy-950'
-                      : 'text-ink-700 hover:bg-navy-900/5 hover:text-navy-950'
+                `rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  isActive ? 'bg-blue-100 text-blue-600' : 'text-ink-700 hover:bg-mist-100 hover:text-ink-900'
                 }`
               }
             >
@@ -82,7 +69,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button to="/plan" size="sm" variant={transparent ? 'primary' : 'primary'}>
+          <Button to="/plan" size="sm">
             Plan a Trip
           </Button>
         </div>
@@ -92,9 +79,7 @@ export function Navbar() {
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className={`relative z-10 flex size-10 items-center justify-center rounded-full lg:hidden ${
-            transparent ? 'text-white' : 'text-navy-950'
-          }`}
+          className="relative z-10 flex size-10 items-center justify-center rounded-full text-ink-900 lg:hidden"
         >
           <span className="relative block h-4 w-5">
             <span
@@ -117,7 +102,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="border-t border-navy-900/10 bg-sand-50 px-5 pb-6 pt-2 lg:hidden"
+            className="border-t border-ink-900/8 bg-white px-5 pb-6 pt-2 lg:hidden"
           >
             <nav className="flex flex-col">
               {LINKS.map((link) => (
@@ -125,7 +110,7 @@ export function Navbar() {
                   key={link.to}
                   to={link.to}
                   className={({ isActive }) =>
-                    `border-b border-navy-900/8 py-3.5 text-base font-medium ${isActive ? 'text-navy-950' : 'text-ink-700'}`
+                    `border-b border-ink-900/8 py-3.5 text-base font-semibold ${isActive ? 'text-blue-600' : 'text-ink-700'}`
                   }
                 >
                   {link.label}
