@@ -9,6 +9,7 @@ const COLUMNS = [
       { to: '/destinations', label: 'Destinations' },
       { to: '/experiences', label: 'Experiences' },
       { to: '/tours', label: 'Expeditions' },
+      { to: '/offers', label: 'Offers' },
       { to: '/journal', label: 'Journal' },
     ],
   },

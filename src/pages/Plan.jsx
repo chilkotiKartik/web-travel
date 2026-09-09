@@ -7,6 +7,7 @@ import { Img } from '../components/ui/Img'
 import { submitBooking } from '../lib/api'
 import { tours } from '../data/tours'
 import { getDestinationBySlug } from '../data/destinations'
+import { getOfferByCode, evaluateOffer } from '../data/offers'
 
 const STEPS = ['Trip', 'Details', 'You', 'Review']
 
@@ -20,6 +21,7 @@ const today = new Date().toISOString().split('T')[0]
 export default function Plan() {
   const [params] = useSearchParams()
   const preselectedSlug = params.get('tour')
+  const preselectedCode = params.get('code')
 
   const [step, setStep] = useState(0)
   const [tourSlug, setTourSlug] = useState(preselectedSlug || '')
@@ -32,6 +34,9 @@ export default function Plan() {
   const [status, setStatus] = useState('idle')
   const [submitError, setSubmitError] = useState('')
   const [booking, setBooking] = useState(null)
+  const [promoInput, setPromoInput] = useState(preselectedCode || '')
+  const [appliedOffer, setAppliedOffer] = useState(null)
+  const [promoError, setPromoError] = useState('')
 
   useEffect(() => {
     if (preselectedSlug) window.scrollTo({ top: 0 })
@@ -46,7 +51,34 @@ export default function Plan() {
     return tours.filter((t) => t.title.toLowerCase().includes(q) || t.destinationSlug.includes(q)).slice(0, 8)
   }, [tourSearch])
 
-  const total = selectedTour ? selectedTour.price * travelers : 0
+  const subtotal = selectedTour ? selectedTour.price * travelers : 0
+  const discount = appliedOffer ? evaluateOffer(appliedOffer, { subtotal, travelers, date }).discount || 0 : 0
+  const total = Math.max(0, subtotal - discount)
+
+  function applyPromo(code) {
+    const value = (code ?? promoInput).trim()
+    if (!value) {
+      setPromoError('Enter a code')
+      setAppliedOffer(null)
+      return
+    }
+    const offer = getOfferByCode(value)
+    const result = evaluateOffer(offer, { subtotal, travelers, date })
+    if (!result.valid) {
+      setPromoError(result.reason)
+      setAppliedOffer(null)
+      return
+    }
+    setAppliedOffer(offer)
+    setPromoError('')
+  }
+
+  useEffect(() => {
+    if (step === 3 && preselectedCode && !appliedOffer && promoInput === preselectedCode) {
+      applyPromo(preselectedCode)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step])
 
   function validateStep(current) {
     const errs = {}
@@ -88,6 +120,9 @@ export default function Plan() {
         travelers,
         sharing,
         pricePerPerson: selectedTour.price,
+        subtotal,
+        promoCode: appliedOffer?.code || null,
+        discount,
         total,
         contact,
       })
@@ -122,6 +157,12 @@ export default function Plan() {
             <span className="text-ink-500">Travellers</span>
             <span className="font-medium text-ink-900">{travelers}</span>
           </div>
+          {appliedOffer && (
+            <div className="flex justify-between text-green-600">
+              <span className="font-medium">Discount ({appliedOffer.code})</span>
+              <span className="font-semibold">−{formatPrice(discount)}</span>
+            </div>
+          )}
           <div className="flex justify-between border-t border-navy-900/8 pt-3">
             <span className="text-ink-500">Total (est.)</span>
             <span className="font-semibold text-ink-900">{formatPrice(total)}</span>
@@ -185,7 +226,7 @@ export default function Plan() {
                       key={t.id}
                       type="button"
                       onClick={() => setTourSlug(t.slug)}
-                      className={`flex gap-3 rounded-xl border p-3 text-left transition-colors ${
+                      className={`flex w-full min-w-0 gap-3 rounded-xl border p-3 text-left transition-colors ${
                         tourSlug === t.slug ? 'border-blue-600 bg-blue-100/60' : 'border-navy-900/10 bg-white hover:border-navy-900/25'
                       }`}
                     >
@@ -305,12 +346,74 @@ export default function Plan() {
                         <dd className="text-right font-medium capitalize text-ink-900">{value}</dd>
                       </div>
                     ))}
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-ink-500">Subtotal</dt>
+                      <dd className="text-right font-medium text-ink-900">{formatPrice(subtotal)}</dd>
+                    </div>
+                    {appliedOffer && (
+                      <div className="flex justify-between gap-4 text-green-600">
+                        <dt className="font-medium">Discount ({appliedOffer.code})</dt>
+                        <dd className="text-right font-semibold">−{formatPrice(discount)}</dd>
+                      </div>
+                    )}
                     <div className="flex justify-between border-t border-navy-900/8 pt-3">
                       <dt className="font-semibold text-ink-900">Total (est.)</dt>
                       <dd className="font-display text-lg font-bold text-ink-900">{formatPrice(total)}</dd>
                     </div>
                   </dl>
                 </div>
+
+                <div className="rounded-2xl border border-navy-900/8 bg-white p-6">
+                  <label htmlFor="promo" className="mb-1.5 block text-sm font-medium text-ink-900">
+                    Have a discount code?
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      id="promo"
+                      value={promoInput}
+                      onChange={(e) => {
+                        setPromoInput(e.target.value)
+                        if (promoError) setPromoError('')
+                      }}
+                      placeholder="e.g. FIRSTTRIP300"
+                      className="w-full flex-1 rounded-xl border border-navy-900/15 bg-white px-4 py-2.5 text-[15px] uppercase text-ink-900 placeholder:normal-case placeholder:text-ink-500/60 outline-none focus:border-blue-600"
+                    />
+                    {appliedOffer ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAppliedOffer(null)
+                          setPromoInput('')
+                        }}
+                        className="shrink-0 rounded-xl border border-navy-900/15 px-4 py-2.5 text-sm font-semibold text-ink-700 hover:bg-navy-900/5"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => applyPromo()}
+                        className="shrink-0 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-navy-800"
+                      >
+                        Apply
+                      </button>
+                    )}
+                  </div>
+                  {appliedOffer && (
+                    <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-green-600">
+                      <span>✓</span> {appliedOffer.title} applied — you're saving {formatPrice(discount)}
+                    </p>
+                  )}
+                  {promoError && (
+                    <p className="mt-2 text-sm text-red-600" role="alert">
+                      {promoError}
+                    </p>
+                  )}
+                  <Link to="/offers" className="mt-2 inline-block text-xs font-medium text-blue-600 hover:underline">
+                    See all current offers →
+                  </Link>
+                </div>
+
                 {status === 'error' && (
                   <p className="text-sm text-red-600" role="alert">
                     {submitError}

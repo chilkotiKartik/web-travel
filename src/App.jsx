@@ -6,11 +6,14 @@ import { Footer } from './components/Footer'
 import { ScrollToTop } from './components/ScrollToTop'
 import { PageTransition } from './components/PageTransition'
 import { FloatingContact } from './components/FloatingContact'
+import { ChatAssistant } from './components/ChatAssistant'
+import { ScrollProgress } from './components/ScrollProgress'
 
 const Home = lazy(() => import('./pages/Home'))
 const Destinations = lazy(() => import('./pages/Destinations'))
 const DestinationDetail = lazy(() => import('./pages/DestinationDetail'))
 const Experiences = lazy(() => import('./pages/Experiences'))
+const Offers = lazy(() => import('./pages/Offers'))
 const Tours = lazy(() => import('./pages/Tours'))
 const TourDetail = lazy(() => import('./pages/TourDetail'))
 const Journal = lazy(() => import('./pages/Journal'))
@@ -40,6 +43,7 @@ function AnimatedRoutes() {
         <Route path="/destinations" element={<PageTransition><Destinations /></PageTransition>} />
         <Route path="/destinations/:slug" element={<PageTransition><DestinationDetail /></PageTransition>} />
         <Route path="/experiences" element={<PageTransition><Experiences /></PageTransition>} />
+        <Route path="/offers" element={<PageTransition><Offers /></PageTransition>} />
         <Route path="/tours" element={<PageTransition><Tours /></PageTransition>} />
         <Route path="/tours/:slug" element={<PageTransition><TourDetail /></PageTransition>} />
         <Route path="/journal" element={<PageTransition><Journal /></PageTransition>} />
@@ -57,6 +61,7 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
+      <ScrollProgress />
       <Navbar />
       <main className="flex-1">
         <Suspense fallback={<RouteFallback />}>
@@ -65,6 +70,7 @@ function App() {
       </main>
       <Footer />
       <FloatingContact />
+      <ChatAssistant />
     </div>
   )
 }

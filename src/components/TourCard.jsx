@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Img } from './ui/Img'
 import { DifficultyBadge } from './ui/Badge'
 import { Rating } from './ui/Rating'
+import { TiltCard } from './ui/TiltCard'
 import { getDestinationBySlug } from '../data/destinations'
 
 function formatPrice(price) {
@@ -11,9 +12,10 @@ function formatPrice(price) {
 export function TourCard({ tour, className = '' }) {
   const destination = getDestinationBySlug(tour.destinationSlug)
   return (
+    <TiltCard className={className} maxTilt={4}>
     <Link
       to={`/tours/${tour.slug}`}
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(11,14,26,0.06)] ring-1 ring-navy-900/6 transition-shadow hover:shadow-lg ${className}`}
+      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(11,14,26,0.06)] ring-1 ring-navy-900/6 transition-shadow hover:shadow-xl"
     >
       <div className="relative">
         <Img src={tour.heroImage} alt={tour.title} className="aspect-[4/3]" imgClassName="transition-transform duration-700 group-hover:scale-105" />
@@ -39,5 +41,6 @@ export function TourCard({ tour, className = '' }) {
         </div>
       </div>
     </Link>
+    </TiltCard>
   )
 }

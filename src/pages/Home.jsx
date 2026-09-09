@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { Container } from '../components/ui/States'
@@ -62,6 +62,15 @@ function RotatingWord() {
     </span>
   )
 }
+
+const MARQUEE_ITEMS = [
+  '42,000+ travellers taken into the mountains',
+  '96% would book with us again',
+  '220+ departures every year',
+  '11 years operating in the Himalayas',
+  'Certified trek leaders on every trip',
+  'Free rescheduling up to 15 days out',
+]
 
 const JOURNEY_STEPS = [
   { n: '01', title: 'Discover', text: 'Browse destinations by landscape, season, and how they actually feel on the ground.' },
@@ -180,6 +189,44 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+        </Container>
+      </section>
+
+      {/* Trust marquee */}
+      <div className="overflow-hidden border-y border-ink-900/8 bg-mist-100/60 py-3">
+        <div className="flex w-max animate-marquee gap-10">
+          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+            <span key={i} className="flex shrink-0 items-center gap-2 text-sm font-semibold text-ink-700">
+              <span className="text-green-500">●</span>
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Offers teaser */}
+      <section className="py-8">
+        <Container>
+          <Reveal>
+            <Link
+              to="/offers"
+              className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 px-6 py-5 text-center text-white shadow-[0_10px_30px_-10px_rgba(19,97,224,0.5)] sm:flex-row sm:justify-between sm:text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🔥</span>
+                <div>
+                  <p className="font-display text-lg font-extrabold">Winter Sale is live — up to 20% off</p>
+                  <p className="text-sm text-white/85">Flash codes, group discounts and early-bird pricing, all working right now.</p>
+                </div>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-ink-900 transition-transform group-hover:scale-105">
+                View Offers
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </Link>
+          </Reveal>
         </Container>
       </section>
 

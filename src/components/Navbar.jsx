@@ -8,6 +8,7 @@ const LINKS = [
   { to: '/destinations', label: 'Destinations' },
   { to: '/experiences', label: 'Experiences' },
   { to: '/tours', label: 'Expeditions' },
+  { to: '/offers', label: 'Offers', badge: true },
   { to: '/journal', label: 'Journal' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
@@ -63,7 +64,10 @@ export function Navbar() {
                 }`
               }
             >
-              {link.label}
+              <span className="inline-flex items-center gap-1.5">
+                {link.label}
+                {link.badge && <span className="size-1.5 rounded-full bg-green-500" />}
+              </span>
             </NavLink>
           ))}
         </nav>
@@ -113,7 +117,12 @@ export function Navbar() {
                     `border-b border-ink-900/8 py-3.5 text-base font-semibold ${isActive ? 'text-blue-600' : 'text-ink-700'}`
                   }
                 >
-                  {link.label}
+                  <span className="inline-flex items-center gap-2">
+                    {link.label}
+                    {link.badge && (
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-600">Sale</span>
+                    )}
+                  </span>
                 </NavLink>
               ))}
             </nav>

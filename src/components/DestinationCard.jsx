@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Img } from './ui/Img'
+import { TiltCard } from './ui/TiltCard'
 
 export function DestinationCard({ destination, className = '', priority = false }) {
   return (
-    <Link to={`/destinations/${destination.slug}`} className={`group block ${className}`}>
+    <TiltCard className={className} maxTilt={4}>
+    <Link to={`/destinations/${destination.slug}`} className="group block h-full">
       <motion.div whileHover="hover" className="relative overflow-hidden rounded-2xl">
         <Img
           src={destination.heroImage}
@@ -30,5 +32,6 @@ export function DestinationCard({ destination, className = '', priority = false 
         </motion.span>
       </motion.div>
     </Link>
+    </TiltCard>
   )
 }
