@@ -17,15 +17,30 @@ const SIZES = {
 }
 
 /** Polymorphic button: renders <Link> for `to`, <a> for `href`, else <button>. */
+const SHINE_VARIANTS = new Set(['primary', 'accent', 'dark'])
+
+/** Diagonal light sweep on hover, matched to justwravel-style CTA polish. */
+function Shine({ show }) {
+  if (!show) return null
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+    />
+  )
+}
+
 export const Button = forwardRef(function Button(
   { as, to, href, variant = 'primary', size = 'md', className = '', children, ...rest },
   ref
 ) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant] || VARIANTS.primary} ${SIZES[size] || SIZES.md} ${className}`
+  const shine = SHINE_VARIANTS.has(variant)
+  const cls = `group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-semibold tracking-tight transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant] || VARIANTS.primary} ${SIZES[size] || SIZES.md} ${className}`
 
   if (to) {
     return (
       <Link ref={ref} to={to} className={cls} {...rest}>
+        <Shine show={shine} />
         {children}
       </Link>
     )
@@ -33,6 +48,7 @@ export const Button = forwardRef(function Button(
   if (href) {
     return (
       <a ref={ref} href={href} className={cls} {...rest}>
+        <Shine show={shine} />
         {children}
       </a>
     )
@@ -40,6 +56,7 @@ export const Button = forwardRef(function Button(
   const Component = as || 'button'
   return (
     <Component ref={ref} className={cls} {...rest}>
+      <Shine show={shine} />
       {children}
     </Component>
   )

@@ -183,13 +183,25 @@ export default function Home() {
                 <img src={images.hero('hero-collage-3', 700, 85)} alt="" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-xl" />
               </div>
             </div>
-            <div className="absolute -left-6 bottom-6 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_10px_30px_rgba(16,24,40,0.15)]">
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -left-6 bottom-6 flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 shadow-[0_10px_30px_rgba(16,24,40,0.15)] backdrop-blur-sm ring-1 ring-white/60"
+            >
               <span className="flex size-9 items-center justify-center rounded-full bg-green-100 text-lg">⭐</span>
               <div>
                 <p className="text-sm font-bold text-ink-900">4.8/5 rated</p>
                 <p className="text-xs text-ink-500">by 3,000+ trekkers</p>
               </div>
-            </div>
+            </motion.div>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+              className="absolute -right-4 top-4 flex items-center gap-2 rounded-2xl bg-white/90 px-3.5 py-2.5 shadow-[0_10px_30px_rgba(16,24,40,0.15)] backdrop-blur-sm ring-1 ring-white/60"
+            >
+              <span className="flex size-7 items-center justify-center rounded-full bg-blue-100 text-sm">🏔️</span>
+              <p className="text-xs font-bold text-ink-900">220+ live routes</p>
+            </motion.div>
           </motion.div>
         </Container>
       </section>
