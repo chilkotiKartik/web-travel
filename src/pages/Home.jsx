@@ -260,20 +260,33 @@ export default function Home() {
           <Reveal>
             <Link
               to="/offers"
-              className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 px-6 py-5 text-center text-white shadow-[0_10px_30px_-10px_rgba(19,97,224,0.5)] sm:flex-row sm:justify-between sm:text-left"
+              className="sweep-loop bg-gradient-move group relative flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 px-6 py-5 text-center text-white shadow-[0_10px_30px_-10px_rgba(19,97,224,0.5)] transition-shadow duration-300 hover:shadow-[0_16px_40px_-10px_rgba(19,97,224,0.65)] sm:flex-row sm:justify-between sm:text-left"
             >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🔥</span>
+              <div className="relative flex items-center gap-3">
+                <motion.span
+                  animate={{ scale: [1, 1.18, 1], rotate: [0, -6, 6, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="text-2xl"
+                >
+                  🔥
+                </motion.span>
                 <div>
                   <p className="font-display text-lg font-extrabold">Winter Sale is live — up to 20% off</p>
                   <p className="text-sm text-white/85">Flash codes, group discounts and early-bird pricing, all working right now.</p>
                 </div>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-ink-900 transition-transform group-hover:scale-105">
+              <span className="relative inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-ink-900 transition-transform duration-300 group-hover:scale-105">
                 View Offers
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <motion.svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                >
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                </motion.svg>
               </span>
             </Link>
           </Reveal>

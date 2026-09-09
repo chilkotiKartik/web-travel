@@ -45,6 +45,46 @@
   }
 }
 
+@keyframes gradient-move {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+  }
+}
+
+.bg-gradient-move {
+  background-size: 220% 220%;
+  animation: gradient-move 6s ease-in-out infinite;
+}
+
+/* continuous light sweep, independent of hover — for banners that should always feel "live" */
+.sweep-loop {
+  position: relative;
+  overflow: hidden;
+}
+.sweep-loop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: sweep 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
 html {
   scroll-behavior: smooth;
 }
