@@ -1,35 +1,21 @@
-// Client-side data layer. Simulates a real API surface (async, latency, occasional
-// failure) over the seeded catalog data, and persists user-generated data
-// (bookings, contact messages, newsletter signups) to localStorage so it
-// survives reloads. Swap the bodies of these functions for real fetch() calls
-// against a backend without touching any calling component.
+// Client-side data layer. Catalog data (destinations/tours/stories) is seeded,
+// static content — served with a simulated delay so loading states are real to
+// test. Everything user-generated (bookings, contact messages, newsletter
+// signups) is written to and read from a live Supabase Postgres database via
+// lib/supabaseClient.js, protected by row-level security policies applied to
+// the project (see the migration history) — this is a real backend, not a
+// localStorage simulation.
 
 import { destinations, getDestinationBySlug } from '../data/destinations'
 import { tours, getTourBySlug, getToursForDestination } from '../data/tours'
 import { stories, getStoryBySlug } from '../data/stories'
+import { supabase } from './supabaseClient'
 
 const LATENCY = { min: 250, max: 650 }
 
 function delay() {
   const ms = LATENCY.min + Math.random() * (LATENCY.max - LATENCY.min)
   return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-function readStore(key, fallback) {
-  try {
-    const raw = window.localStorage.getItem(key)
-    return raw ? JSON.parse(raw) : fallback
-  } catch {
-    return fallback
-  }
-}
-
-function writeStore(key, value) {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  } catch {
-    // storage unavailable (private mode / quota) — fail silently, UI still confirms in-memory
-  }
 }
 
 class ApiError extends Error {
@@ -104,50 +90,99 @@ export async function fetchStory(slug) {
   return s
 }
 
-// ---------- Writes (persisted to localStorage) ----------
-
-function simulateFlakiness(rate = 0.06) {
-  if (Math.random() < rate) throw new ApiError('Network hiccup — please try again.')
-}
+// ---------- Writes (real Postgres tables, RLS-protected) ----------
 
 export async function submitBooking(payload) {
-  await delay()
-  simulateFlakiness()
-  const bookings = readStore('wayfare:bookings', [])
-  const record = {
-    id: `bk_${Date.now().toString(36)}`,
-    createdAt: new Date().toISOString(),
-    status: 'confirmed',
-    ...payload,
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new ApiError('You must be logged in to book a trip')
+
+  const { data, error } = await supabase
+    .from('bookings')
+    .insert({
+      user_id: user.id,
+      tour_slug: payload.tourSlug,
+      tour_title: payload.tourTitle,
+      destination: payload.destination,
+      trip_date: payload.date || null,
+      travelers: payload.travelers,
+      sharing: payload.sharing,
+      price_per_person: payload.pricePerPerson,
+      subtotal: payload.subtotal,
+      promo_code: payload.promoCode,
+      discount: payload.discount,
+      total: payload.total,
+      contact_name: payload.contact.name,
+      contact_email: payload.contact.email,
+      contact_phone: payload.contact.phone,
+      notes: payload.contact.notes,
+    })
+    .select()
+    .single()
+
+  if (error) throw new ApiError(error.message)
+  return {
+    id: data.id,
+    createdAt: data.created_at,
+    status: data.status,
+    tourSlug: data.tour_slug,
+    tourTitle: data.tour_title,
+    destination: data.destination,
+    date: data.trip_date,
+    travelers: data.travelers,
+    sharing: data.sharing,
+    pricePerPerson: data.price_per_person,
+    subtotal: data.subtotal,
+    promoCode: data.promo_code,
+    discount: data.discount,
+    total: data.total,
+    contact: { name: data.contact_name, email: data.contact_email, phone: data.contact_phone, notes: data.notes },
   }
-  bookings.push(record)
-  writeStore('wayfare:bookings', bookings)
-  return record
 }
 
 export async function fetchBookings() {
-  await delay()
-  return readStore('wayfare:bookings', [])
+  const { data, error } = await supabase.from('bookings').select('*').order('created_at', { ascending: false })
+  if (error) throw new ApiError(error.message)
+  return data.map((b) => ({
+    id: b.id,
+    createdAt: b.created_at,
+    status: b.status,
+    tourSlug: b.tour_slug,
+    tourTitle: b.tour_title,
+    destination: b.destination,
+    date: b.trip_date,
+    travelers: b.travelers,
+    sharing: b.sharing,
+    total: b.total,
+    contact: { name: b.contact_name, email: b.contact_email, phone: b.contact_phone },
+  }))
 }
 
 export async function submitContactMessage(payload) {
-  await delay()
-  simulateFlakiness()
-  const messages = readStore('wayfare:messages', [])
-  const record = { id: `msg_${Date.now().toString(36)}`, createdAt: new Date().toISOString(), ...payload }
-  messages.push(record)
-  writeStore('wayfare:messages', messages)
-  return record
+  const { data, error } = await supabase
+    .from('contact_messages')
+    .insert({
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone || null,
+      subject: payload.subject,
+      message: payload.message,
+    })
+    .select()
+    .single()
+
+  if (error) throw new ApiError(error.message)
+  return { id: data.id, createdAt: data.created_at }
 }
 
 export async function subscribeNewsletter(email) {
-  await delay()
-  simulateFlakiness(0.04)
-  const subs = readStore('wayfare:newsletter', [])
-  if (subs.includes(email)) {
-    return { alreadySubscribed: true, email }
+  const { error } = await supabase.from('newsletter_subscribers').insert({ email })
+  if (error) {
+    if (error.code === '23505') {
+      return { alreadySubscribed: true, email }
+    }
+    throw new ApiError(error.message)
   }
-  subs.push(email)
-  writeStore('wayfare:newsletter', subs)
   return { alreadySubscribed: false, email }
 }

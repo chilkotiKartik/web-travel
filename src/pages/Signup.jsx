@@ -16,6 +16,7 @@ export default function Signup() {
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [formError, setFormError] = useState('')
+  const [needsConfirmation, setNeedsConfirmation] = useState(false)
 
   function update(field, value) {
     setValues((v) => ({ ...v, [field]: value }))
@@ -34,12 +35,37 @@ export default function Signup() {
     setStatus('loading')
     setFormError('')
     try {
-      await signUp(values)
-      navigate('/account', { replace: true })
+      const { needsEmailConfirmation } = await signUp(values)
+      if (needsEmailConfirmation) {
+        setNeedsConfirmation(true)
+        setStatus('idle')
+      } else {
+        navigate('/account', { replace: true })
+      }
     } catch (err) {
       setFormError(err instanceof AuthError ? err.message : 'Something went wrong. Please try again.')
       setStatus('error')
     }
+  }
+
+  if (needsConfirmation) {
+    return (
+      <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white py-16">
+        <Container className="relative max-w-md text-center">
+          <div className="rounded-3xl border border-ink-900/8 bg-white p-8 shadow-[0_20px_50px_-20px_rgba(16,24,40,0.2)]">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-green-100 text-2xl">📧</div>
+            <h1 className="mt-4 font-display text-2xl font-extrabold text-ink-900">Check your inbox</h1>
+            <p className="mt-2 text-sm text-ink-500">
+              We've sent a confirmation link to <span className="font-semibold text-ink-900">{values.email}</span>. Click it to
+              activate your account, then come back and log in.
+            </p>
+            <Link to="/login" className="mt-6 inline-block rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
+              Go to Log In
+            </Link>
+          </div>
+        </Container>
+      </section>
+    )
   }
 
   return (

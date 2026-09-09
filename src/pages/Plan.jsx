@@ -30,8 +30,8 @@ export default function Plan() {
   const [travelers, setTravelers] = useState(2)
   const [date, setDate] = useState('')
   const [sharing, setSharing] = useState('twin')
-  const { user } = useAuth()
-  const [contact, setContact] = useState({ name: user?.name || '', email: user?.email || '', phone: '', notes: '' })
+  const { user, loading: authLoading } = useAuth()
+  const [contact, setContact] = useState({ name: '', email: '', phone: '', notes: '' })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [submitError, setSubmitError] = useState('')
@@ -43,6 +43,12 @@ export default function Plan() {
   useEffect(() => {
     if (preselectedSlug) window.scrollTo({ top: 0 })
   }, [preselectedSlug])
+
+  useEffect(() => {
+    if (user) {
+      setContact((c) => ({ ...c, name: c.name || user.name, email: c.email || user.email }))
+    }
+  }, [user])
 
   const selectedTour = tours.find((t) => t.slug === tourSlug)
   const selectedDestination = selectedTour ? getDestinationBySlug(selectedTour.destinationSlug) : null
@@ -136,13 +142,40 @@ export default function Plan() {
     }
   }
 
+  if (!authLoading && !user) {
+    return (
+      <Container className="flex min-h-[70vh] flex-col items-center justify-center py-24 text-center">
+        <div className="flex size-14 items-center justify-center rounded-full bg-blue-100 text-2xl">🔒</div>
+        <h1 className="mt-6 font-display text-3xl font-bold text-ink-900 sm:text-4xl">Log in to book a trip</h1>
+        <p className="mt-3 max-w-md text-ink-700">
+          Your bookings live in your account so you can find them again later. It takes less than a minute.
+        </p>
+        <div className="mt-8 flex gap-3">
+          <Link
+            to="/login"
+            state={{ from: `/plan${window.location.search}` }}
+            className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-navy-800"
+          >
+            Log In
+          </Link>
+          <Link
+            to="/signup"
+            className="rounded-full border border-ink-900/15 px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-mist-100"
+          >
+            Create Account
+          </Link>
+        </div>
+      </Container>
+    )
+  }
+
   if (status === 'success' && booking) {
     return (
       <Container className="flex min-h-[70vh] flex-col items-center justify-center py-24 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-green-500 text-3xl text-white">✓</div>
         <h1 className="mt-6 font-display text-3xl font-bold text-ink-900 sm:text-4xl">Your spot is booked</h1>
         <p className="mt-3 max-w-md text-ink-700">
-          Booking <span className="font-semibold text-ink-900">#{booking.id}</span> confirmed for {selectedTour.title}. A
+          Booking <span className="font-semibold text-ink-900">#{booking.id.slice(0, 8)}</span> confirmed for {selectedTour.title}. A
           confirmation has been logged to your account — our team will email {contact.email} with payment and gear details
           within one business day.
         </p>

@@ -1,94 +1,50 @@
-// Client-side account system: real signup/login/session/logout, persisted to
-// localStorage. Passwords are hashed with the browser's native SubtleCrypto
-// (SHA-256) before storage — this is a static frontend with no server, so this
-// is honestly a demo-grade account system, not a substitute for real backend
-// auth. It's real in the sense that it works: sessions persist across reloads,
-// duplicate emails are rejected, wrong passwords are rejected, and every page
-// that reads "the current user" reads the same source of truth.
+// Real account system backed by Supabase Auth (Postgres + GoTrue) — not a
+// localStorage simulation. Sessions are managed by the Supabase client itself
+// (persisted to localStorage as an encrypted-at-rest-by-Supabase JWT, refreshed
+// automatically); this module just exposes a small, app-shaped surface over it.
 
-const USERS_KEY = 'wayfare:users'
-const SESSION_KEY = 'wayfare:session'
-
-const listeners = new Set()
-
-function notify() {
-  const user = getCurrentUser()
-  listeners.forEach((fn) => fn(user))
-}
-
-export function onAuthChange(fn) {
-  listeners.add(fn)
-  return () => listeners.delete(fn)
-}
-
-function readUsers() {
-  try {
-    return JSON.parse(window.localStorage.getItem(USERS_KEY) || '[]')
-  } catch {
-    return []
-  }
-}
-
-function writeUsers(users) {
-  window.localStorage.setItem(USERS_KEY, JSON.stringify(users))
-}
-
-async function hashPassword(password) {
-  const data = new TextEncoder().encode(password)
-  const digest = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-}
-
-function delay(ms = 400 + Math.random() * 300) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+import { supabase } from './supabaseClient'
 
 export class AuthError extends Error {}
 
+function shapeUser(user) {
+  if (!user) return null
+  return { id: user.id, name: user.user_metadata?.name || user.email.split('@')[0], email: user.email }
+}
+
+export function onAuthChange(fn) {
+  const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    fn(shapeUser(session?.user))
+  })
+  return () => data.subscription.unsubscribe()
+}
+
 export async function signUp({ name, email, password }) {
-  await delay()
-  const users = readUsers()
-  const normalizedEmail = email.trim().toLowerCase()
-  if (users.some((u) => u.email === normalizedEmail)) {
-    throw new AuthError('An account with this email already exists')
-  }
-  const passwordHash = await hashPassword(password)
-  const user = { name: name.trim(), email: normalizedEmail, passwordHash, createdAt: new Date().toISOString() }
-  users.push(user)
-  writeUsers(users)
-  window.localStorage.setItem(SESSION_KEY, normalizedEmail)
-  notify()
-  return { name: user.name, email: user.email }
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim().toLowerCase(),
+    password,
+    options: { data: { name: name.trim() } },
+  })
+  if (error) throw new AuthError(error.message)
+  // If email confirmation is required, Supabase returns a user but no session —
+  // the caller needs to know which case it is rather than assume instant login.
+  return { user: shapeUser(data.user), needsEmailConfirmation: !data.session }
 }
 
 export async function logIn({ email, password }) {
-  await delay()
-  const users = readUsers()
-  const normalizedEmail = email.trim().toLowerCase()
-  const user = users.find((u) => u.email === normalizedEmail)
-  if (!user) throw new AuthError('No account found with this email')
-  const passwordHash = await hashPassword(password)
-  if (passwordHash !== user.passwordHash) throw new AuthError('Incorrect password')
-  window.localStorage.setItem(SESSION_KEY, normalizedEmail)
-  notify()
-  return { name: user.name, email: user.email }
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password,
+  })
+  if (error) throw new AuthError(error.message)
+  return shapeUser(data.user)
 }
 
-export function logOut() {
-  window.localStorage.removeItem(SESSION_KEY)
-  notify()
+export async function logOut() {
+  await supabase.auth.signOut()
 }
 
-export function getCurrentUser() {
-  try {
-    const email = window.localStorage.getItem(SESSION_KEY)
-    if (!email) return null
-    const users = readUsers()
-    const user = users.find((u) => u.email === email)
-    return user ? { name: user.name, email: user.email } : null
-  } catch {
-    return null
-  }
+export async function getCurrentUser() {
+  const { data } = await supabase.auth.getUser()
+  return shapeUser(data.user)
 }

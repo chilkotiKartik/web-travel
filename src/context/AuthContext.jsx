@@ -4,11 +4,18 @@ import { getCurrentUser, onAuthChange, logIn, signUp, logOut } from '../lib/auth
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => getCurrentUser())
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => onAuthChange(setUser), [])
+  useEffect(() => {
+    getCurrentUser().then((u) => {
+      setUser(u)
+      setLoading(false)
+    })
+    return onAuthChange(setUser)
+  }, [])
 
-  return <AuthContext.Provider value={{ user, logIn, signUp, logOut }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, loading, logIn, signUp, logOut }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

@@ -16,19 +16,18 @@ function formatPrice(price) {
 }
 
 export default function Account() {
-  const { user, logOut } = useAuth()
+  const { user, loading, logOut } = useAuth()
   const navigate = useNavigate()
-  const { status, data, error, reload } = useAsync(fetchBookings, [])
+  const { status, data, error, reload } = useAsync(fetchBookings, [user?.id])
 
   useEffect(() => {
-    if (!user) navigate('/login', { replace: true, state: { from: '/account' } })
-  }, [user, navigate])
+    if (!loading && !user) navigate('/login', { replace: true, state: { from: '/account' } })
+  }, [loading, user, navigate])
 
-  if (!user) return null
+  if (loading || !user) return null
 
-  const myBookings = (data || [])
-    .filter((b) => b.contact?.email?.toLowerCase() === user.email)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  // RLS already scopes every row returned by fetchBookings() to the signed-in user.
+  const myBookings = [...(data || [])].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
   function handleLogout() {
     logOut()
@@ -106,7 +105,7 @@ export default function Account() {
                     <p className="text-sm text-ink-500">
                       {b.destination} · {b.date ? dateFmt.format(new Date(b.date)) : '—'} · {b.travelers} traveller{b.travelers === 1 ? '' : 's'}
                     </p>
-                    <p className="mt-1 text-xs text-ink-500">Booking #{b.id}</p>
+                    <p className="mt-1 text-xs text-ink-500">Booking #{b.id.slice(0, 8)}</p>
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="font-display text-lg font-bold text-ink-900">{formatPrice(b.total)}</p>
