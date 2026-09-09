@@ -187,6 +187,39 @@ export async function subscribeNewsletter(email) {
   return { alreadySubscribed: false, email }
 }
 
+export async function submitEnquiry(payload) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Anonymous visitors can submit enquiries (no login wall on lead capture), but they
+  // have no SELECT policy to read the row back — Postgres requires a RETURNING row to
+  // also pass a SELECT policy, so generate the id client-side and skip .select() instead.
+  const id = crypto.randomUUID()
+  const createdAt = new Date().toISOString()
+
+  const { error } = await supabase.from('enquiries').insert({
+    id,
+    created_at: createdAt,
+    user_id: user?.id || null,
+    destination: payload.destination,
+    trip_start: payload.tripStart || null,
+    trip_end: payload.tripEnd || null,
+    travelers: payload.travelers,
+    trip_type: payload.tripType,
+    hotel_preference: payload.hotelPreference,
+    transport_preference: payload.transportPreference,
+    budget_band: payload.budgetBand,
+    special_needs: payload.specialNeeds || null,
+    contact_name: payload.contact.name,
+    contact_email: payload.contact.email,
+    contact_phone: payload.contact.phone,
+  })
+
+  if (error) throw new ApiError(error.message)
+  return { id, createdAt }
+}
+
 // ---------- Admin reads (RLS only returns rows to admins; empty array otherwise) ----------
 
 export async function fetchAllBookings() {
@@ -226,4 +259,30 @@ export async function fetchAllNewsletterSubscribers() {
   const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false })
   if (error) throw new ApiError(error.message)
   return data.map((s) => ({ id: s.id, email: s.email, createdAt: s.created_at }))
+}
+
+export async function fetchAllEnquiries() {
+  const { data, error } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false })
+  if (error) throw new ApiError(error.message)
+  return data.map((e) => ({
+    id: e.id,
+    createdAt: e.created_at,
+    destination: e.destination,
+    tripStart: e.trip_start,
+    tripEnd: e.trip_end,
+    travelers: e.travelers,
+    tripType: e.trip_type,
+    hotelPreference: e.hotel_preference,
+    transportPreference: e.transport_preference,
+    budgetBand: e.budget_band,
+    specialNeeds: e.special_needs,
+    status: e.status,
+    source: e.source,
+    contact: { name: e.contact_name, email: e.contact_email, phone: e.contact_phone },
+  }))
+}
+
+export async function updateEnquiryStatus(id, status) {
+  const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+  if (error) throw new ApiError(error.message)
 }

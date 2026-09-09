@@ -4,6 +4,7 @@ import { DifficultyBadge } from './ui/Badge'
 import { Rating } from './ui/Rating'
 import { TiltCard } from './ui/TiltCard'
 import { getDestinationBySlug } from '../data/destinations'
+import { useCompare } from '../context/CompareContext'
 
 function formatPrice(price) {
   return `₹${price.toLocaleString('en-IN')}`
@@ -11,6 +12,9 @@ function formatPrice(price) {
 
 export function TourCard({ tour, className = '' }) {
   const destination = getDestinationBySlug(tour.destinationSlug)
+  const { slugs, toggle, isFull } = useCompare()
+  const inCompare = slugs.includes(tour.slug)
+
   return (
     <TiltCard className={className} maxTilt={4}>
     <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-500 via-green-500 to-blue-500 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-40" />
@@ -26,6 +30,29 @@ export function TourCard({ tour, className = '' }) {
         <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-ink-900">
           {tour.duration}D / {tour.nights}N
         </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            toggle(tour.slug)
+          }}
+          disabled={!inCompare && isFull}
+          aria-pressed={inCompare}
+          title={inCompare ? 'Remove from compare' : 'Add to compare'}
+          className={`absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+            inCompare ? 'bg-green-500 text-ink-900' : 'bg-white/95 text-ink-700 hover:bg-white'
+          }`}
+        >
+          <span className={`flex size-3.5 items-center justify-center rounded-full border ${inCompare ? 'border-ink-900 bg-ink-900 text-white' : 'border-ink-500/50'}`}>
+            {inCompare && (
+              <svg width="8" height="8" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </span>
+          Compare
+        </button>
       </div>
       <div className="flex flex-1 flex-col p-4">
         {destination && <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">{destination.name}</p>}

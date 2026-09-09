@@ -29,6 +29,8 @@ const COLUMNS = [
       { to: '/tours', label: 'Expeditions' },
       { to: '/offers', label: 'Offers' },
       { to: '/journal', label: 'Journal' },
+      { to: '/custom-trip', label: 'Custom Trip Planner' },
+      { to: '/compare', label: 'Compare Trips' },
     ],
   },
   {

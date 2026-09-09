@@ -5,7 +5,7 @@ import { Container, ErrorState } from '../components/ui/States'
 import { Reveal } from '../components/ui/Reveal'
 import { useAuth } from '../context/AuthContext'
 import { useAsync } from '../hooks/useAsync'
-import { fetchAllBookings, fetchAllContactMessages, fetchAllNewsletterSubscribers } from '../lib/api'
+import { fetchAllBookings, fetchAllContactMessages, fetchAllNewsletterSubscribers, fetchAllEnquiries, updateEnquiryStatus } from '../lib/api'
 
 const dateFmt = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 
@@ -28,19 +28,37 @@ function StatCard({ label, value, icon, accent, delay = 0 }) {
 }
 
 const TABS = [
+  { id: 'leads', label: 'Leads' },
   { id: 'bookings', label: 'Bookings' },
   { id: 'messages', label: 'Messages' },
   { id: 'subscribers', label: 'Subscribers' },
 ]
 
+export const LEAD_STATUSES = [
+  { id: 'new_lead', label: 'New Lead', tone: 'bg-blue-100 text-blue-700' },
+  { id: 'contacted', label: 'Contacted', tone: 'bg-sky-100 text-sky-700' },
+  { id: 'quotation_sent', label: 'Quotation Sent', tone: 'bg-amber-100 text-amber-700' },
+  { id: 'follow_up', label: 'Follow-up', tone: 'bg-orange-100 text-orange-700' },
+  { id: 'payment_pending', label: 'Payment Pending', tone: 'bg-rose-100 text-rose-700' },
+  { id: 'booked', label: 'Booked', tone: 'bg-green-100 text-green-700' },
+  { id: 'completed', label: 'Completed', tone: 'bg-emerald-100 text-emerald-700' },
+  { id: 'review_requested', label: 'Review Requested', tone: 'bg-purple-100 text-purple-700' },
+  { id: 'repeat_referral', label: 'Repeat / Referral', tone: 'bg-teal-100 text-teal-700' },
+]
+
+function leadStatusMeta(id) {
+  return LEAD_STATUSES.find((s) => s.id === id) || LEAD_STATUSES[0]
+}
+
 export default function Admin() {
   const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
-  const [tab, setTab] = useState('bookings')
+  const [tab, setTab] = useState('leads')
 
   const bookingsQ = useAsync(fetchAllBookings, [user?.id])
   const messagesQ = useAsync(fetchAllContactMessages, [user?.id])
   const subscribersQ = useAsync(fetchAllNewsletterSubscribers, [user?.id])
+  const enquiriesQ = useAsync(fetchAllEnquiries, [user?.id])
 
   useEffect(() => {
     if (!authLoading && (!user || !user.isAdmin)) navigate('/', { replace: true })
@@ -52,6 +70,9 @@ export default function Admin() {
   const revenue = bookings.reduce((sum, b) => sum + (b.total || 0), 0)
   const messages = messagesQ.data || []
   const subscribers = subscribersQ.data || []
+  const enquiries = enquiriesQ.data || []
+  const newLeads = enquiries.filter((e) => e.status === 'new_lead').length
+  const conversionRate = enquiries.length > 0 ? Math.round((bookings.length / enquiries.length) * 100) : 0
 
   return (
     <section className="bg-mist-100/40 py-16 sm:py-24">
@@ -62,11 +83,13 @@ export default function Admin() {
           <p className="mt-1 text-sm text-ink-500">Signed in as {user.name} ({user.email})</p>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <StatCard label="Total bookings" value={bookings.length} icon="🧭" accent="bg-blue-100 text-blue-600" delay={0} />
-          <StatCard label="Revenue booked" value={formatPrice(revenue)} icon="💰" accent="bg-green-100 text-green-600" delay={0.05} />
-          <StatCard label="Contact messages" value={messages.length} icon="✉️" accent="bg-blue-100 text-blue-600" delay={0.1} />
-          <StatCard label="Newsletter subscribers" value={subscribers.length} icon="📬" accent="bg-green-100 text-green-600" delay={0.15} />
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          <StatCard label="Total leads" value={enquiries.length} icon="🧲" accent="bg-purple-100 text-purple-600" delay={0} />
+          <StatCard label="New leads" value={newLeads} icon="✨" accent="bg-blue-100 text-blue-600" delay={0.03} />
+          <StatCard label="Total bookings" value={bookings.length} icon="🧭" accent="bg-blue-100 text-blue-600" delay={0.06} />
+          <StatCard label="Revenue booked" value={formatPrice(revenue)} icon="💰" accent="bg-green-100 text-green-600" delay={0.09} />
+          <StatCard label="Lead → booking rate" value={`${conversionRate}%`} icon="📈" accent="bg-amber-100 text-amber-600" delay={0.12} />
+          <StatCard label="Messages + subscribers" value={messages.length + subscribers.length} icon="✉️" accent="bg-teal-100 text-teal-600" delay={0.15} />
         </div>
 
         <div className="mt-10 flex gap-2 rounded-full bg-white p-1.5 shadow-sm sm:inline-flex">
@@ -87,6 +110,9 @@ export default function Admin() {
         </div>
 
         <div className="mt-6 overflow-hidden rounded-2xl border border-ink-900/8 bg-white">
+          {tab === 'leads' && (
+            <LeadsTable query={enquiriesQ} />
+          )}
           {tab === 'bookings' && (
             <BookingsTable query={bookingsQ} />
           )}
@@ -99,6 +125,64 @@ export default function Admin() {
         </div>
       </Container>
     </section>
+  )
+}
+
+function LeadsTable({ query }) {
+  const [updating, setUpdating] = useState(null)
+
+  if (query.status === 'loading') return <TableSkeleton cols={5} />
+  if (query.status === 'error') return <div className="p-6"><ErrorState message={query.error?.message} onRetry={query.reload} /></div>
+  if (query.data.length === 0) return <EmptyPanel text="No enquiries yet — they'll land here from the Custom Trip Planner." />
+
+  async function handleStatusChange(id, status) {
+    setUpdating(id)
+    try {
+      await updateEnquiryStatus(id, status)
+      await query.reload()
+    } finally {
+      setUpdating(null)
+    }
+  }
+
+  return (
+    <div className="divide-y divide-ink-900/6">
+      {query.data.map((e) => {
+        const meta = leadStatusMeta(e.status)
+        return (
+          <div key={e.id} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-semibold text-ink-900">{e.contact.name}</p>
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${meta.tone}`}>{meta.label}</span>
+                <span className="rounded-full bg-ink-900/5 px-2.5 py-0.5 text-xs font-medium text-ink-500">via {e.source}</span>
+              </div>
+              <p className="mt-1 text-xs text-ink-500">
+                {e.contact.email} · {e.contact.phone || 'no phone'}
+              </p>
+              <p className="mt-1.5 text-sm text-ink-700">
+                {e.destination || 'Any destination'} · {e.tripType || 'Trip type TBD'} · {e.travelers} traveller{e.travelers === 1 ? '' : 's'} ·{' '}
+                {e.budgetBand || 'budget TBD'}
+              </p>
+              {e.specialNeeds && <p className="mt-1 text-xs italic text-ink-500">"{e.specialNeeds}"</p>}
+              <p className="mt-1 text-xs text-ink-400">{dateFmt.format(new Date(e.createdAt))}</p>
+            </div>
+            <select
+              value={e.status}
+              disabled={updating === e.id}
+              onChange={(ev) => handleStatusChange(e.id, ev.target.value)}
+              className="shrink-0 rounded-full border border-ink-900/15 bg-white px-3 py-2 text-xs font-semibold text-ink-900 outline-none focus:border-blue-600 disabled:opacity-50"
+            >
+              {LEAD_STATUSES.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 

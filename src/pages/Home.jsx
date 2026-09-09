@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { Container } from '../components/ui/States'
 import { Button } from '../components/ui/Button'
@@ -85,6 +85,12 @@ const JOURNEY_STEPS = [
 export default function Home() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
+  const reduced = useReducedMotion()
+  const heroRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '14%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   function handleSearch(e) {
     e.preventDefault()
@@ -93,117 +99,127 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pt-28 pb-16 sm:pt-32 sm:pb-20">
-        <div className="pointer-events-none absolute -left-24 top-10 size-72 rounded-full bg-blue-500/15 blur-3xl" />
-        <div className="pointer-events-none absolute right-0 top-40 size-80 rounded-full bg-green-500/15 blur-3xl" />
+      {/* Hero — cinematic opening scene */}
+      <section ref={heroRef} className="relative flex min-h-[92vh] items-end overflow-hidden bg-navy-950 pb-16 pt-32 sm:pb-24">
+        {/* background reveal */}
+        <motion.div
+          initial={reduced ? undefined : { opacity: 0, scale: 1.08 }}
+          animate={reduced ? undefined : { opacity: 1, scale: 1 }}
+          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          style={reduced ? undefined : { y: bgY }}
+          className="absolute inset-[-4%]"
+        >
+          <img
+            src={images.destination('himachal-pradesh', 2000, 85)}
+            alt=""
+            className="h-full w-full object-cover"
+            fetchPriority="high"
+          />
+        </motion.div>
 
-        <Container className="relative grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center">
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-blue-600 shadow-[0_2px_10px_rgba(16,24,40,0.08)]"
-            >
-              🇮🇳 India's Social Travel Community
-            </motion.p>
+        {/* atmosphere */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/55 to-navy-950/25" />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/70 via-navy-950/10 to-transparent" />
+        <div className="pointer-events-none absolute -right-24 top-24 size-96 rounded-full bg-blue-500/15 blur-[100px]" />
 
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-balance mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-ink-900 sm:text-6xl"
-            >
-              Book Your Trip
-              <br />
-              to <RotatingWord />
-            </motion.h1>
+        <motion.div style={reduced ? undefined : { y: contentY, opacity: contentOpacity }}>
+          <Container className="relative">
+            <div className="max-w-2xl">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur-sm"
+              >
+                🇮🇳 India's Social Travel Community
+              </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-6 max-w-lg text-lg text-ink-500"
-            >
-              220+ handpicked treks, road trips and expeditions across India. Real trek leaders, real logistics,
-              80,000+ Wravelers who've already gone before you.
-            </motion.p>
+              <motion.h1
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.65 }}
+                className="text-balance mt-5 font-display text-5xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-7xl"
+              >
+                Book Your Trip
+                <br />
+                to <RotatingWord />
+              </motion.h1>
 
-            <motion.form
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              onSubmit={handleSearch}
-              className="mt-8 flex max-w-lg flex-col gap-2 rounded-2xl bg-white p-2 shadow-[0_8px_30px_rgba(16,24,40,0.1)] sm:flex-row sm:items-center"
-              role="search"
-            >
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search 'Ladakh', 'snow trek', 'Hampta Pass'…"
-                aria-label="Search destinations and expeditions"
-                className="w-full flex-1 rounded-xl bg-transparent px-4 py-3 text-ink-900 placeholder:text-ink-500/60 outline-none"
-              />
-              <Button as="button" type="submit" className="w-full sm:w-auto">
-                Search Trips
-              </Button>
-            </motion.form>
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.85 }}
+                className="mt-6 max-w-lg text-lg text-white/75"
+              >
+                220+ handpicked treks, road trips and expeditions across India. Real trek leaders, real logistics,
+                80,000+ Wravelers who've already gone before you.
+              </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4"
-            >
-              {stats.map((s) => (
-                <div key={s.id}>
-                  <p className="font-display text-2xl font-extrabold text-ink-900 sm:text-3xl">
-                    <Counter value={s.value} suffix={s.suffix} />
-                  </p>
-                  <p className="mt-1 text-xs text-ink-500 sm:text-sm">{s.label}</p>
-                </div>
-              ))}
-            </motion.div>
-          </div>
+              <motion.form
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                onSubmit={handleSearch}
+                className="mt-8 flex max-w-lg flex-col gap-2 rounded-2xl bg-white p-2 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] sm:flex-row sm:items-center"
+                role="search"
+              >
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search 'Ladakh', 'snow trek', 'Hampta Pass'…"
+                  aria-label="Search destinations and expeditions"
+                  className="w-full flex-1 rounded-xl bg-transparent px-4 py-3 text-ink-900 placeholder:text-ink-500/60 outline-none"
+                />
+                <Button as="button" type="submit" className="w-full sm:w-auto">
+                  Search Trips
+                </Button>
+              </motion.form>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative hidden lg:block"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4 pt-10">
-                <img src={images.hero('hero-collage-1', 700, 85)} alt="" className="aspect-[3/4] w-full rounded-3xl object-cover shadow-xl" />
-              </div>
-              <div className="space-y-4">
-                <img src={images.hero('hero-collage-2', 700, 85)} alt="" className="aspect-square w-full rounded-3xl object-cover shadow-xl" />
-                <img src={images.hero('hero-collage-3', 700, 85)} alt="" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-xl" />
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 1.15 }}
+                className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4"
+              >
+                {stats.map((s) => (
+                  <div key={s.id}>
+                    <p className="font-display text-2xl font-extrabold text-white sm:text-3xl">
+                      <Counter value={s.value} suffix={s.suffix} />
+                    </p>
+                    <p className="mt-1 text-xs text-white/60 sm:text-sm">{s.label}</p>
+                  </div>
+                ))}
+              </motion.div>
             </div>
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -left-6 bottom-6 flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 shadow-[0_10px_30px_rgba(16,24,40,0.15)] backdrop-blur-sm ring-1 ring-white/60"
-            >
-              <span className="flex size-9 items-center justify-center rounded-full bg-green-100 text-lg">⭐</span>
-              <div>
-                <p className="text-sm font-bold text-ink-900">4.8/5 rated</p>
-                <p className="text-xs text-ink-500">by 3,000+ trekkers</p>
-              </div>
-            </motion.div>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-              className="absolute -right-4 top-4 flex items-center gap-2 rounded-2xl bg-white/90 px-3.5 py-2.5 shadow-[0_10px_30px_rgba(16,24,40,0.15)] backdrop-blur-sm ring-1 ring-white/60"
-            >
-              <span className="flex size-7 items-center justify-center rounded-full bg-blue-100 text-sm">🏔️</span>
-              <p className="text-xs font-bold text-ink-900">220+ live routes</p>
-            </motion.div>
-          </motion.div>
-        </Container>
+          </Container>
+        </motion.div>
+
+        {/* floating metadata */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+          className="absolute right-6 top-28 hidden items-center gap-2 rounded-2xl bg-white/90 px-3.5 py-2.5 shadow-[0_10px_30px_rgba(16,24,40,0.2)] backdrop-blur-sm ring-1 ring-white/60 sm:right-10 sm:flex lg:top-32"
+        >
+          <span className="flex size-7 items-center justify-center rounded-full bg-blue-100 text-sm">🏔️</span>
+          <p className="text-xs font-bold text-ink-900">220+ live routes</p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.4 }}
+          className="absolute bottom-28 right-6 hidden items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 shadow-[0_10px_30px_rgba(16,24,40,0.2)] backdrop-blur-sm ring-1 ring-white/60 sm:right-10 sm:flex"
+        >
+          <span className="flex size-9 items-center justify-center rounded-full bg-green-100 text-lg">⭐</span>
+          <div>
+            <p className="text-sm font-bold text-ink-900">4.8/5 rated</p>
+            <p className="text-xs text-ink-500">by 3,000+ trekkers</p>
+          </div>
+        </motion.div>
+
+        {/* bridge into the next section */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-white" />
       </section>
 
       {/* Daily highlight */}

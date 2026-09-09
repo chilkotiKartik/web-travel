@@ -20,12 +20,30 @@ const SORTS = [
   { id: 'rating', label: 'Highest Rated' },
 ]
 
+const BUDGETS = [
+  { id: '', label: 'Any Budget' },
+  { id: '0-10000', label: 'Under ₹10,000' },
+  { id: '10000-20000', label: '₹10,000 – ₹20,000' },
+  { id: '20000-30000', label: '₹20,000 – ₹30,000' },
+  { id: '30000-999999', label: '₹30,000+' },
+]
+
+const DURATIONS = [
+  { id: '', label: 'Any Duration' },
+  { id: '0-4', label: 'Up to 4 days' },
+  { id: '5-7', label: '5–7 days' },
+  { id: '8-10', label: '8–10 days' },
+  { id: '11-99', label: '11+ days' },
+]
+
 export default function Tours() {
   const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState(params.get('q') || '')
   const [category, setCategory] = useState(params.get('category') || '')
   const [difficulty, setDifficulty] = useState(params.get('difficulty') || '')
   const [destinationSlug, setDestinationSlug] = useState(params.get('destination') || '')
+  const [budget, setBudget] = useState(params.get('budget') || '')
+  const [duration, setDuration] = useState(params.get('duration') || '')
   const [sort, setSort] = useState('popular')
   const debouncedQuery = useDebounce(query, 250)
 
@@ -37,9 +55,11 @@ export default function Tours() {
     if (category) next.category = category
     if (difficulty) next.difficulty = difficulty
     if (destinationSlug) next.destination = destinationSlug
+    if (budget) next.budget = budget
+    if (duration) next.duration = duration
     setParams(next, { replace: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQuery, category, difficulty, destinationSlug])
+  }, [debouncedQuery, category, difficulty, destinationSlug, budget, duration])
 
   const filtered = useMemo(() => {
     if (!data) return []
@@ -47,6 +67,14 @@ export default function Tours() {
     if (category) result = result.filter((t) => t.category === category)
     if (difficulty) result = result.filter((t) => t.difficulty === difficulty)
     if (destinationSlug) result = result.filter((t) => t.destinationSlug === destinationSlug)
+    if (budget) {
+      const [min, max] = budget.split('-').map(Number)
+      result = result.filter((t) => t.price >= min && t.price <= max)
+    }
+    if (duration) {
+      const [min, max] = duration.split('-').map(Number)
+      result = result.filter((t) => t.duration >= min && t.duration <= max)
+    }
     if (debouncedQuery.trim()) {
       const q = debouncedQuery.toLowerCase()
       result = result.filter(
@@ -63,13 +91,15 @@ export default function Tours() {
     else if (sort === 'rating') sorted.sort((a, b) => b.rating - a.rating)
     else sorted.sort((a, b) => b.reviewsCount - a.reviewsCount)
     return sorted
-  }, [data, category, difficulty, destinationSlug, debouncedQuery, sort])
+  }, [data, category, difficulty, destinationSlug, budget, duration, debouncedQuery, sort])
 
   function clearAll() {
     setQuery('')
     setCategory('')
     setDifficulty('')
     setDestinationSlug('')
+    setBudget('')
+    setDuration('')
     setParams({}, { replace: true })
   }
 
@@ -108,6 +138,20 @@ export default function Tours() {
                   </option>
                 ))}
               </Select>
+              <Select value={budget} onChange={(e) => setBudget(e.target.value)} className="w-auto! min-w-40">
+                {BUDGETS.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.label}
+                  </option>
+                ))}
+              </Select>
+              <Select value={duration} onChange={(e) => setDuration(e.target.value)} className="w-auto! min-w-40">
+                {DURATIONS.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.label}
+                  </option>
+                ))}
+              </Select>
               <Select value={sort} onChange={(e) => setSort(e.target.value)} className="w-auto! min-w-44">
                 {SORTS.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -131,7 +175,7 @@ export default function Tours() {
 
           <div className="mt-6 flex items-center justify-between text-sm text-ink-500">
             <span>{status === 'success' ? `${filtered.length} trip${filtered.length === 1 ? '' : 's'} found` : ' '}</span>
-            {(query || category || difficulty || destinationSlug) && (
+            {(query || category || difficulty || destinationSlug || budget || duration) && (
               <button onClick={clearAll} className="font-medium text-blue-600 hover:underline">
                 Clear all filters
               </button>

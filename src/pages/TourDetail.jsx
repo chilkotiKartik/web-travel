@@ -11,6 +11,7 @@ import { TourCard } from '../components/TourCard'
 import { useAsync } from '../hooks/useAsync'
 import { fetchTour, fetchToursForDestination } from '../lib/api'
 import { getDestinationBySlug } from '../data/destinations'
+import { useCompare } from '../context/CompareContext'
 
 function formatPrice(price) {
   return `₹${price.toLocaleString('en-IN')}`
@@ -32,6 +33,7 @@ export default function TourDetail() {
     () => (tour ? fetchToursForDestination(tour.destinationSlug) : Promise.resolve([])),
     [tour?.destinationSlug]
   )
+  const { slugs: compareSlugs, toggle: toggleCompare, isFull } = useCompare()
 
   if (status === 'loading') {
     return (
@@ -57,6 +59,7 @@ export default function TourDetail() {
 
   const destination = getDestinationBySlug(tour.destinationSlug)
   const related = (relatedQuery.data || []).filter((t) => t.id !== tour.id).slice(0, 3)
+  const inCompare = compareSlugs.includes(tour.slug)
 
   const overviewTab = (
     <div className="space-y-8">
@@ -200,6 +203,16 @@ export default function TourDetail() {
               <Button to="/contact" variant="outline-dark" className="mt-3 w-full">
                 Ask a Question
               </Button>
+              <button
+                type="button"
+                onClick={() => toggleCompare(tour.slug)}
+                disabled={!inCompare && isFull}
+                className={`mt-3 flex w-full items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                  inCompare ? 'border-green-500 bg-green-50 text-green-700' : 'border-navy-900/15 text-ink-900 hover:bg-navy-900/5'
+                }`}
+              >
+                {inCompare ? '✓ Added to Compare' : '⚖️ Add to Compare'}
+              </button>
               <ul className="mt-6 space-y-2 border-t border-navy-900/8 pt-5 text-sm text-ink-500">
                 <li>✓ Free rescheduling up to 15 days out</li>
                 <li>✓ Certified trek leaders on every departure</li>

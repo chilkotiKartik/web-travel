@@ -8,6 +8,7 @@ import { PageTransition } from './components/PageTransition'
 import { FloatingContact } from './components/FloatingContact'
 import { ChatAssistant } from './components/ChatAssistant'
 import { ScrollProgress } from './components/ScrollProgress'
+import { CompareBar } from './components/CompareBar'
 
 const Home = lazy(() => import('./pages/Home'))
 const Destinations = lazy(() => import('./pages/Destinations'))
@@ -21,6 +22,8 @@ const StoryDetail = lazy(() => import('./pages/StoryDetail'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Plan = lazy(() => import('./pages/Plan'))
+const CustomTrip = lazy(() => import('./pages/CustomTrip'))
+const Compare = lazy(() => import('./pages/Compare'))
 const Login = lazy(() => import('./pages/Login'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Account = lazy(() => import('./pages/Account'))
@@ -60,6 +63,8 @@ function AnimatedRoutes() {
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
         <Route path="/plan" element={<PageTransition><Plan /></PageTransition>} />
+        <Route path="/custom-trip" element={<PageTransition><CustomTrip /></PageTransition>} />
+        <Route path="/compare" element={<PageTransition><Compare /></PageTransition>} />
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/account" element={<PageTransition><Account /></PageTransition>} />
@@ -84,6 +89,7 @@ function App() {
       <Footer />
       <FloatingContact />
       <ChatAssistant />
+      <CompareBar />
     </div>
   )
 }

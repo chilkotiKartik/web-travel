@@ -222,6 +222,12 @@ export default function Plan() {
         <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
           Four short steps to your next departure
         </h1>
+        <Link
+          to="/custom-trip"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-green-600 hover:underline"
+        >
+          Don't see a fixed departure that fits? Build a fully custom itinerary →
+        </Link>
 
         {/* Stepper */}
         <div className="mt-10 flex items-center gap-2">
