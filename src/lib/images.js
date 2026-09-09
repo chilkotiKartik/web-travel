@@ -80,6 +80,21 @@ function pick(list, seed) {
   return list[hash % list.length]
 }
 
+// Hand-matched (not hashed) per-destination cinematic photography, for spots — like
+// the homepage destination showcase — where the image must actually represent the place.
+const DESTINATION_PHOTO = {
+  'himachal-pradesh': '1506905925346-21bda4d32df4', // pine ridgeline, alpine valley
+  ladakh: '1533130061792-64b345e4a833', // high-altitude desert / monastery landscape
+  uttarakhand: '1506197603052-3cc9c3a201bd', // Himalayan snow peaks
+  'spiti-valley': '1470770903676-69b98201ea1c', // cold desert canyon
+  meghalaya: '1626621341517-bbf3d9990a23', // lush green river valley
+  kashmir: '1476514525535-07fb3b4ae5f1', // alpine lake & meadow
+  sikkim: '1544735716-392fe2489ffa', // snow summit
+  rajasthan: '1524850011238-e3d235c7d4c9', // desert dunes / fort
+  goa: '1506744038136-46273834b3fb', // coastline
+  kerala: '1590523277543-a94d2e4eb00b', // backwaters
+}
+
 export const images = {
   mountains,
   water,
@@ -89,4 +104,5 @@ export const images = {
   pick,
   hero: (seed, w, q) => pick(pool, seed)(w, q),
   portrait: (seed, w, q) => pick(portraits, seed)(w, q),
+  destination: (slug, w = 1600, q = 85) => build(DESTINATION_PHOTO[slug] || pick(pool, slug))(w, q),
 }

@@ -6,13 +6,13 @@ import { Container } from '../components/ui/States'
 import { Button } from '../components/ui/Button'
 import { Reveal, Stagger, staggerItem } from '../components/ui/Reveal'
 import { Counter } from '../components/ui/Counter'
-import { DestinationCard } from '../components/DestinationCard'
 import { TourCard } from '../components/TourCard'
 import { StoryCard } from '../components/StoryCard'
 import { TestimonialsSection } from '../components/TestimonialsSection'
 import { NewsletterForm } from '../components/NewsletterForm'
 import { CircularIconRow } from '../components/CircularIconRow'
 import { DailyHighlight } from '../components/DailyHighlight'
+import { DestinationShowcase } from '../components/DestinationShowcase'
 import { destinations } from '../data/destinations'
 import { tours, categories } from '../data/tours'
 import { stories } from '../data/stories'
@@ -264,32 +264,16 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Featured destinations */}
-      <section className="py-24 sm:py-28">
-        <Container>
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <Reveal>
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Where to next</p>
-              <h2 className="text-balance mt-2 max-w-lg font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-5xl">
-                Ten landscapes, one country
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <Button to="/destinations" variant="outline-dark">
-                All Destinations
-              </Button>
-            </Reveal>
-          </div>
-
-          <Stagger className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {FEATURED_DESTINATIONS.map((d, i) => (
-              <motion.div key={d.id} variants={staggerItem} className={i === 0 ? 'col-span-2 row-span-2' : ''}>
-                <DestinationCard destination={d} priority={i === 0} className="h-full" />
-              </motion.div>
-            ))}
-          </Stagger>
-        </Container>
-      </section>
+      {/* Featured destinations — editorial showcase, not a card grid */}
+      <DestinationShowcase destinations={FEATURED_DESTINATIONS} />
+      <div className="bg-mist-100/70 pb-6 pt-2 text-center">
+        <Link to="/destinations" className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 hover:text-blue-700">
+          Browse all 10 destinations
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+      </div>
 
       {/* Experiences by category */}
       <section className="bg-mist-100/70 py-24 sm:py-28">
