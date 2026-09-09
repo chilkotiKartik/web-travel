@@ -4,6 +4,7 @@ import { Counter } from '../components/ui/Counter'
 import { Button } from '../components/ui/Button'
 import { Img } from '../components/ui/Img'
 import { TestimonialsSection } from '../components/TestimonialsSection'
+import { WhyChooseSection } from '../components/WhyChooseSection'
 import { team, stats } from '../data/misc'
 import { motion } from 'framer-motion'
 
@@ -47,6 +48,8 @@ export default function About() {
           </Reveal>
         </Container>
       </section>
+
+      <WhyChooseSection />
 
       <section className="bg-gradient-to-br from-blue-600 to-green-600 py-16 text-white sm:py-20">
         <Container>
