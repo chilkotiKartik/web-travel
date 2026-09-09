@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950:#060a3d; --navy-900:#0a1152; --navy-800:#101c6e; --navy-700:#16278c;
+      --blue-600:#1361e0; --blue-500:#2f7bff; --blue-100:#dbeaff;
+      --green-600:#2fa524; --green-500:#52c93c; --green-100:#e5f9df;
+      --mist-100:#f2f6fb; --ink-900:#16181d; --ink-700:#3f434c; --ink-500:#6b7280;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Poppins', system-ui, sans-serif; background: #fff; color: var(--ink-900); }
+    a { color: var(--blue-600); text-decoration: none; }
+    a:hover { color: var(--navy-800); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+    @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulseGlow { 0%,100% { opacity: 0.35; } 50% { opacity: 0.6; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .reveal { opacity: 0; animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+    .section { max-width: 1180px; margin: 0 auto; padding: 64px 32px; }
+    .eyebrow { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue-600); }
+    .h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -0.02em; color: var(--ink-900); margin: 8px 0 0; }
+    .sub { color: var(--ink-500); font-size: 15px; margin: 10px 0 0; max-width: 560px; line-height: 1.6; }
+
+    /* swatch */
+    .swatch { border-radius: 16px; padding: 18px; height: 96px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s; cursor: default; }
+    .swatch:hover { transform: translateY(-6px); box-shadow: 0 16px 32px -12px rgba(16,24,40,0.28); }
+    .swatch-name { font-size: 13px; font-weight: 700; }
+    .swatch-hex { font-size: 11px; opacity: 0.75; font-family: 'SFMono-Regular', Menlo, monospace; }
+
+    /* buttons */
+    .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; font-weight: 600; font-size: 14px; padding: 13px 26px; border: none; cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
+    .btn::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%) skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); transition: transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .btn:hover::after { transform: translateX(100%) skewX(-20deg); }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--blue-600); color: #fff; box-shadow: 0 10px 24px -8px rgba(19,97,224,0.55); }
+    .btn-primary:hover { background: var(--navy-800); }
+    .btn-accent { background: var(--green-500); color: #0b0e1a; box-shadow: 0 10px 24px -8px rgba(82,201,60,0.5); }
+    .btn-accent:hover { background: var(--green-600); }
+    .btn-dark { background: var(--navy-900); color: #fff; }
+    .btn-dark:hover { background: var(--navy-800); }
+    .btn-outline { background: transparent; color: var(--ink-900); border: 2px solid rgba(16,24,40,0.12); }
+    .btn-outline:hover { background: var(--mist-100); }
+
+    /* cards */
+    .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+    .card { position: relative; border-radius: 20px; background: #fff; box-shadow: 0 1px 0 rgba(11,14,26,0.06); border: 1px solid rgba(16,24,40,0.06); overflow: hidden; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s; perspective: 800px; }
+    .card:hover { transform: rotateX(4deg) rotateY(-4deg) translateY(-4px); box-shadow: 0 24px 48px -20px rgba(16,24,40,0.35); }
+    .card-media { position: relative; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--blue-500), var(--green-500)); }
+    .card-media::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s; background: radial-gradient(220px circle at 30% 30%, rgba(255,255,255,0.35), transparent 70%); }
+    .card:hover .card-media::before { opacity: 1; }
+    .card-glow { position: absolute; inset: -2px; border-radius: 22px; opacity: 0; transition: opacity 0.4s; background: linear-gradient(120deg, var(--blue-500), var(--green-500), var(--blue-500)); z-index: -1; filter: blur(14px); }
+    .card:hover .card-glow { opacity: 0.5; }
+    .card-body { padding: 16px; }
+    .card-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--blue-600); }
+    .card-title { font-weight: 700; font-size: 17px; margin: 4px 0 0; }
+    .card-price { font-weight: 800; font-size: 16px; margin-top: 10px; }
+
+    /* badges */
+    .pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; transition: transform 0.2s; }
+    .pill:hover { transform: translateY(-2px); }
+
+    .stars { display: inline-flex; gap: 2px; }
+    .stars svg { transition: transform 0.2s; }
+    .stars:hover svg { transform: scale(1.12); }
+
+    /* shimmer skeleton */
+    .skeleton { position: relative; overflow: hidden; background: var(--mist-100); border-radius: 12px; }
+    .skeleton::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: shimmer 1.6s infinite; }
+
+    /* marquee */
+    .marquee-track { display: flex; width: max-content; gap: 40px; animation: marquee 18s linear infinite; }
+    .marquee-wrap { overflow: hidden; border-top: 1px solid rgba(16,24,40,0.08); border-bottom: 1px solid rgba(16,24,40,0.08); background: var(--mist-100); padding: 14px 0; }
+
+    /* floating badge demo */
+    .float-demo { position: relative; height: 220px; border-radius: 24px; background: linear-gradient(160deg, var(--navy-950), var(--navy-800)); overflow: hidden; }
+    .glow-orb { position: absolute; border-radius: 999px; filter: blur(60px); animation: pulseGlow 4s ease-in-out infinite; }
+    .float-chip { position: absolute; background: rgba(255,255,255,0.92); border-radius: 16px; padding: 10px 16px; font-size: 12px; font-weight: 700; box-shadow: 0 12px 30px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; }
+    .float-chip.a { top: 24px; left: 28px; animation: float 4s ease-in-out infinite; }
+    .float-chip.b { bottom: 28px; right: 32px; animation: floatSlow 5s ease-in-out infinite; }
+
+    .ring { width: 34px; height: 34px; border-radius: 999px; border: 3px solid transparent; border-top-color: var(--blue-500); border-right-color: var(--green-500); animation: spin 1.1s linear infinite; }
+
+    .cta { position: relative; overflow: hidden; border-radius: 28px; padding: 56px 44px; background: linear-gradient(120deg, var(--blue-600), var(--green-600)); color: #fff; text-align: center; }
+    .cta .orb1 { position: absolute; width: 220px; height: 220px; right: -60px; top: -60px; background: rgba(255,255,255,0.14); }
+    .cta .orb2 { position: absolute; width: 220px; height: 220px; left: -50px; bottom: -70px; background: rgba(255,255,255,0.14); animation-delay: 1.5s; }
+
+    .stagger > * { opacity: 0; animation: rise 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+  </style>
+</helmet>
+
+<div style="display:flex; flex-direction:column;">
+
+  <!-- Intro -->
+  <div style="background:linear-gradient(180deg, var(--blue-100) 0%, #fff 70%); padding:80px 32px 56px;">
+    <div style="max-width:1180px; margin:0 auto;">
+      <p class="eyebrow reveal" style="animation-delay:0.05s;">Wayfare — Design System</p>
+      <h1 class="reveal" style="animation-delay:0.15s; font-family:'Poppins',sans-serif; font-weight:800; font-size:56px; letter-spacing:-0.03em; line-height:1.02; margin:14px 0 0;">Colour, motion &amp;<br>components in one place</h1>
+      <p class="sub reveal" style="animation-delay:0.28s; max-width:640px;">Every hue, hover state and animation used across the live site — pulled straight from the brand tokens, buttons, cards and CRM status colours already shipping in the app.</p>
+    </div>
+  </div>
+
+  <!-- Colour system -->
+  <div class="section">
+    <p class="eyebrow">Colour</p>
+    <h2 class="h2">Brand palette</h2>
+    <p class="sub">Bright blue and green on navy and white — no neon, no random gradients.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px; margin-top:32px;">
+      <div class="swatch" style="background:var(--navy-950); color:#fff;"><span class="swatch-name">Navy 950</span><span class="swatch-hex">#060A3D</span></div>
+      <div class="swatch" style="background:var(--navy-900); color:#fff;"><span class="swatch-name">Navy 900</span><span class="swatch-hex">#0A1152</span></div>
+      <div class="swatch" style="background:var(--navy-800); color:#fff;"><span class="swatch-name">Navy 800</span><span class="swatch-hex">#101C6E</span></div>
+      <div class="swatch" style="background:var(--navy-700); color:#fff;"><span class="swatch-name">Navy 700</span><span class="swatch-hex">#16278C</span></div>
+      <div class="swatch" style="background:var(--ink-900); color:#fff;"><span class="swatch-name">Ink 900</span><span class="swatch-hex">#16181D</span></div>
+
+      <div class="swatch" style="background:var(--blue-600); color:#fff;"><span class="swatch-name">Blue 600</span><span class="swatch-hex">#1361E0</span></div>
+      <div class="swatch" style="background:var(--blue-500); color:#fff;"><span class="swatch-name">Blue 500</span><span class="swatch-hex">#2F7BFF</span></div>
+      <div class="swatch" style="background:var(--blue-100); color:var(--navy-900);"><span class="swatch-name">Blue 100</span><span class="swatch-hex">#DBEAFF</span></div>
+      <div class="swatch" style="background:var(--green-600); color:#fff;"><span class="swatch-name">Green 600</span><span class="swatch-hex">#2FA524</span></div>
+      <div class="swatch" style="background:var(--green-500); color:#0b0e1a;"><span class="swatch-name">Green 500</span><span class="swatch-hex">#52C93C</span></div>
+
+      <div class="swatch" style="background:var(--green-100); color:var(--navy-900);"><span class="swatch-name">Green 100</span><span class="swatch-hex">#E5F9DF</span></div>
+      <div class="swatch" style="background:var(--mist-100); color:var(--navy-900); border:1px solid rgba(16,24,40,0.08);"><span class="swatch-name">Mist 100</span><span class="swatch-hex">#F2F6FB</span></div>
+      <div class="swatch" style="background:#fff; color:var(--navy-900); border:1px solid rgba(16,24,40,0.1);"><span class="swatch-name">Sand 50</span><span class="swatch-hex">#FFFFFF</span></div>
+      <div class="swatch" style="background:var(--ink-700); color:#fff;"><span class="swatch-name">Ink 700</span><span class="swatch-hex">#3F434C</span></div>
+      <div class="swatch" style="background:var(--ink-500); color:#fff;"><span class="swatch-name">Ink 500</span><span class="swatch-hex">#6B7280</span></div>
+    </div>
+
+    <p style="margin-top:28px; font-size:13px; font-weight:600; color:var(--ink-500);">Admin CRM pipeline — nine statuses, nine hues, one system</p>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">
+      <span class="pill" style="background:#dbeafe; color:#1d4ed8;">New Lead</span>
+      <span class="pill" style="background:#e0f2fe; color:#0369a1;">Contacted</span>
+      <span class="pill" style="background:#fef3c7; color:#b45309;">Quotation Sent</span>
+      <span class="pill" style="background:#ffedd5; color:#c2410c;">Follow-up</span>
+      <span class="pill" style="background:#ffe4e6; color:#be123c;">Payment Pending</span>
+      <span class="pill" style="background:#dcfce7; color:#15803d;">Booked</span>
+      <span class="pill" style="background:#d1fae5; color:#047857;">Completed</span>
+      <span class="pill" style="background:#f3e8ff; color:#7e22ce;">Review Requested</span>
+      <span class="pill" style="background:#ccfbf1; color:#0f766e;">Repeat / Referral</span>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section" style="background:var(--mist-100); border-radius:32px; max-width:1180px;">
+    <p class="eyebrow">Typography</p>
+    <h2 class="h2">Poppins, every weight in use</h2>
+    <div style="margin-top:28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:18px;"><span style="width:64px; font-size:12px; color:var(--ink-500);">800</span><span style="font-weight:800; font-size:40px; letter-spacing:-0.02em;">Book your trip to Ladakh</span></div>
+      <div style="display:flex; align-items:baseline; gap:18px;"><span style="width:64px; font-size:12px; color:var(--ink-500);">700</span><span style="font-weight:700; font-size:28px;">Ten landscapes, one country</span></div>
+      <div style="display:flex; align-items:baseline; gap:18px;"><span style="width:64px; font-size:12px; color:var(--ink-500);">600</span><span style="font-weight:600; font-size:20px;">Expeditions people actually rebook</span></div>
+      <div style="display:flex; align-items:baseline; gap:18px;"><span style="width:64px; font-size:12px; color:var(--ink-500);">500</span><span style="font-weight:500; font-size:16px; color:var(--ink-700);">220+ handpicked treks, road trips and expeditions across India.</span></div>
+      <div style="display:flex; align-items:baseline; gap:18px;"><span style="width:64px; font-size:12px; color:var(--ink-500);">400</span><span style="font-weight:400; font-size:14px; color:var(--ink-500);">Real trek leaders, real logistics, 80,000+ Wravelers who've already gone before you.</span></div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="section">
+    <p class="eyebrow">Motion — buttons</p>
+    <h2 class="h2">Hover for the light sweep</h2>
+    <p class="sub">A diagonal shine travels across every primary CTA on hover, with a 2px lift.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:28px;">
+      <button class="btn btn-primary">Search Trips</button>
+      <button class="btn btn-accent">Confirm Booking</button>
+      <button class="btn btn-dark">Plan a Trip</button>
+      <button class="btn btn-outline">All Destinations</button>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="section">
+    <p class="eyebrow">Motion — cards</p>
+    <h2 class="h2">Tilt, spotlight, glow border</h2>
+    <p class="sub">Every destination and tour card tilts in 3D toward the cursor with a soft spotlight and a rotating gradient border underneath.</p>
+    <div class="card-grid" style="margin-top:28px;">
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-media"></div>
+        <div class="card-body">
+          <p class="card-tag">Himachal Pradesh</p>
+          <p class="card-title">Hampta Pass Trek</p>
+          <div class="stars">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+          </div>
+          <p class="card-price">₹8,999</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-media" style="background:linear-gradient(135deg, var(--navy-800), var(--blue-500));"></div>
+        <div class="card-body">
+          <p class="card-tag">Ladakh</p>
+          <p class="card-title">Chadar Frozen River Trek</p>
+          <div class="stars">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+          </div>
+          <p class="card-price">₹24,999</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-media" style="background:linear-gradient(135deg, var(--green-600), var(--green-100));"></div>
+        <div class="card-body">
+          <p class="card-tag">Meghalaya</p>
+          <p class="card-title">Living Root Bridges Trek</p>
+          <div class="stars">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="var(--green-500)"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="#d8dee8"><path d="M8 1l2.1 4.4 4.9.7-3.5 3.4.8 4.9L8 12.1 3.7 14.4l.8-4.9L1 6.1l4.9-.7z"/></svg>
+          </div>
+          <p class="card-price">₹11,999</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badges + loading -->
+  <div class="section" style="display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div>
+      <p class="eyebrow">Difficulty badges</p>
+      <h2 class="h2" style="font-size:26px;">Three tones, brand-only</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;">
+        <span class="pill" style="background:var(--green-100); color:var(--green-600);">Easy</span>
+        <span class="pill" style="background:var(--blue-100); color:var(--blue-600);">Moderate</span>
+        <span class="pill" style="background:rgba(22,24,29,0.06); color:var(--ink-900);">Difficult</span>
+        <span class="pill" style="background:rgba(22,24,29,0.06); color:var(--ink-900);">Extreme</span>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">Loading state</p>
+      <h2 class="h2" style="font-size:26px;">Shimmer, not a flat pulse</h2>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:20px;">
+        <div class="skeleton" style="height:14px; width:60%;"></div>
+        <div class="skeleton" style="height:14px; width:90%;"></div>
+        <div class="skeleton" style="height:14px; width:40%;"></div>
+      </div>
+      <div style="margin-top:18px;"><div class="ring"></div></div>
+    </div>
+  </div>
+
+  <!-- Floating chips + marquee -->
+  <div class="section">
+    <p class="eyebrow">Motion — ambient</p>
+    <h2 class="h2">Floating metadata &amp; glow</h2>
+    <p class="sub">Glass chips bob gently over the hero; ambient blur orbs pulse behind the copy.</p>
+    <div class="float-demo" style="margin-top:24px;">
+      <div class="glow-orb" style="width:220px; height:220px; left:-40px; top:-20px; background:var(--blue-500);"></div>
+      <div class="glow-orb" style="width:220px; height:220px; right:-40px; bottom:-40px; background:var(--green-500); animation-delay:1.2s;"></div>
+      <div class="float-chip a">
+        <span style="width:24px; height:24px; border-radius:999px; background:var(--green-100); display:flex; align-items:center; justify-content:center;">★</span>
+        4.8/5 rated
+      </div>
+      <div class="float-chip b">
+        <span style="width:22px; height:22px; border-radius:999px; background:var(--blue-100);"></span>
+        220+ live routes
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 42,000+ travellers taken into the mountains</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 96% would book with us again</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 220+ departures every year</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 11 years operating in the Himalayas</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 42,000+ travellers taken into the mountains</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 96% would book with us again</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 220+ departures every year</span>
+      <span style="font-size:13px; font-weight:600; color:var(--ink-700); white-space:nowrap;">● 11 years operating in the Himalayas</span>
+    </div>
+  </div>
+
+  <!-- Nav active pill -->
+  <div class="section">
+    <p class="eyebrow">Motion — navigation</p>
+    <h2 class="h2">Spring-animated active pill</h2>
+    <p class="sub">A single pill slides between nav links on a physical spring, instead of an instant colour swap.</p>
+    <div style="display:inline-flex; gap:4px; background:#fff; border:1px solid rgba(16,24,40,0.08); border-radius:999px; padding:6px; margin-top:24px;">
+      <span style="padding:9px 18px; border-radius:999px; font-size:14px; font-weight:600; color:var(--ink-700);">Destinations</span>
+      <span style="padding:9px 18px; border-radius:999px; font-size:14px; font-weight:600; background:var(--blue-100); color:var(--blue-600);">Expeditions</span>
+      <span style="padding:9px 18px; border-radius:999px; font-size:14px; font-weight:600; color:var(--ink-700);">Offers</span>
+      <span style="padding:9px 18px; border-radius:999px; font-size:14px; font-weight:600; color:var(--ink-700);">Journal</span>
+    </div>
+  </div>
+
+  <!-- CTA gradient -->
+  <div class="section">
+    <div class="cta">
+      <div class="orb1"></div>
+      <div class="orb2"></div>
+      <p style="position:relative; font-weight:800; font-size:32px; margin:0;">The mountains aren't going anywhere.<br>Your excuses will.</p>
+      <p style="position:relative; margin:14px 0 0; opacity:0.85; font-size:14px;">Blue → green brand gradient, used once, at the highest-intent moment.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding:40px 32px 64px; font-size:12px; color:var(--ink-500);">Wayfare Design System — colour tokens, type ramp and motion patterns pulled from the live site.</div>
+
+</div>
+</x-dc>
+<script data-dc-script>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
