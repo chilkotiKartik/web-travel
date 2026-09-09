@@ -110,11 +110,11 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300 ${
-        scrolled ? 'shadow-[0_2px_16px_rgba(16,24,40,0.08)]' : 'shadow-[0_1px_0_rgba(16,24,40,0.06)]'
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,height] duration-300 ${
+        scrolled ? 'glass-surface h-[72px] shadow-[0_2px_24px_rgba(16,24,40,0.1)]' : 'h-20 bg-white shadow-[0_1px_0_rgba(16,24,40,0.06)]'
       }`}
     >
-      <Container className="flex h-20 items-center justify-between py-4">
+      <Container className="flex h-full items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-2" aria-label="Wayfare home">
           <span className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500 font-display text-lg font-extrabold text-white">
             W
@@ -125,22 +125,33 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {LINKS.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                  isActive ? 'bg-blue-100 text-blue-600' : 'text-ink-700 hover:bg-mist-100 hover:text-ink-900'
-                }`
-              }
-            >
-              <span className="inline-flex items-center gap-1.5">
-                {link.label}
-                {link.badge && <span className="size-1.5 rounded-full bg-green-500" />}
-              </span>
-            </NavLink>
-          ))}
+          {LINKS.map((link) => {
+            const isActive = pathname === link.to || pathname.startsWith(link.to + '/')
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={`relative rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  isActive ? 'text-blue-600' : 'text-ink-700 hover:text-ink-900'
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="navbar-active-pill"
+                    className="absolute inset-0 rounded-full bg-blue-100"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                )}
+                {!isActive && (
+                  <span className="absolute inset-0 rounded-full bg-mist-100 opacity-0 transition-opacity duration-200 hover:opacity-100" />
+                )}
+                <span className="relative inline-flex items-center gap-1.5">
+                  {link.label}
+                  {link.badge && <span className="size-1.5 rounded-full bg-green-500" />}
+                </span>
+              </NavLink>
+            )
+          })}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">

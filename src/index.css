@@ -36,6 +36,15 @@
   }
 }
 
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -92,4 +101,41 @@ body::before {
 
 .text-balance {
   text-wrap: balance;
+}
+
+/* thin, brand-tinted scrollbar for the main page */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(19, 97, 224, 0.35) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(19, 97, 224, 0.3);
+  border-radius: 999px;
+  border: 2px solid var(--color-sand-50);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(19, 97, 224, 0.55);
+}
+
+/* crisper focus ring than the browser default, still fully visible for a11y */
+:focus-visible {
+  outline-color: var(--color-blue-600);
+}
+
+img {
+  color-interpolation-filters: sRGB;
+}
+
+/* reusable glass surface for nav/overlays */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
 }

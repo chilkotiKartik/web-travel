@@ -1,6 +1,24 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { NewsletterForm } from './NewsletterForm'
 import { Container } from './ui/States'
+
+function BackToTop() {
+  return (
+    <motion.button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.94 }}
+      aria-label="Back to top"
+      className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/40 hover:text-white"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 13V3M3 7l5-5 5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </motion.button>
+  )
+}
 
 const COLUMNS = [
   {
@@ -26,8 +44,11 @@ const COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="bg-navy-950 text-white/70">
-      <Container className="pt-16 pb-10">
+    <footer className="relative overflow-hidden bg-navy-950 text-white/70">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
+      <div className="pointer-events-none absolute -left-32 top-0 size-96 rounded-full bg-blue-600/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 size-96 rounded-full bg-green-600/10 blur-3xl" />
+      <Container className="relative pt-16 pb-10">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <Link to="/" className="flex items-center gap-2">
@@ -48,7 +69,7 @@ export function Footer() {
                   key={s}
                   href="#"
                   onClick={(e) => e.preventDefault()}
-                  className="flex size-9 items-center justify-center rounded-full border border-white/15 text-xs font-medium text-white/70 transition-colors hover:border-white/40 hover:text-white"
+                  className="flex size-9 items-center justify-center rounded-full border border-white/15 text-xs font-medium text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-500/50 hover:text-white hover:shadow-[0_0_16px_-2px_rgba(82,201,60,0.5)]"
                   aria-label={s}
                 >
                   {s[0]}
@@ -81,9 +102,10 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Wayfare Travel Co. All rights reserved.</p>
-          <div className="flex gap-5">
+          <div className="flex items-center gap-5">
             <span className="cursor-default">Privacy Policy</span>
             <span className="cursor-default">Terms of Service</span>
+            <BackToTop />
           </div>
         </div>
       </Container>
