@@ -27,7 +27,14 @@ const Compare = lazy(() => import('./pages/Compare'))
 const Login = lazy(() => import('./pages/Login'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Account = lazy(() => import('./pages/Account'))
-const Admin = lazy(() => import('./pages/Admin'))
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
+const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
+const AdminLeads = lazy(() => import('./pages/admin/Leads'))
+const AdminBookings = lazy(() => import('./pages/admin/Bookings'))
+const AdminMessages = lazy(() => import('./pages/admin/Messages'))
+const AdminSubscribers = lazy(() => import('./pages/admin/Subscribers'))
+const AdminTrips = lazy(() => import('./pages/admin/Trips'))
+const AdminReports = lazy(() => import('./pages/admin/Reports'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function RouteFallback() {
@@ -48,9 +55,12 @@ function RouteFallback() {
 
 function AnimatedRoutes() {
   const location = useLocation()
+  // Admin sub-routes share one key so the admin shell (and its loaded data)
+  // survives navigation between admin pages instead of remounting each time.
+  const routeKey = location.pathname.startsWith('/admin') ? '/admin' : location.pathname
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location} key={routeKey}>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
         <Route path="/destinations" element={<PageTransition><Destinations /></PageTransition>} />
         <Route path="/destinations/:slug" element={<PageTransition><DestinationDetail /></PageTransition>} />
@@ -68,7 +78,15 @@ function AnimatedRoutes() {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/account" element={<PageTransition><Account /></PageTransition>} />
-        <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="leads" element={<AdminLeads />} />
+          <Route path="bookings" element={<AdminBookings />} />
+          <Route path="messages" element={<AdminMessages />} />
+          <Route path="subscribers" element={<AdminSubscribers />} />
+          <Route path="trips" element={<AdminTrips />} />
+          <Route path="reports" element={<AdminReports />} />
+        </Route>
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

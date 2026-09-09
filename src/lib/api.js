@@ -278,11 +278,17 @@ export async function fetchAllEnquiries() {
     specialNeeds: e.special_needs,
     status: e.status,
     source: e.source,
+    adminNotes: e.admin_notes || '',
     contact: { name: e.contact_name, email: e.contact_email, phone: e.contact_phone },
   }))
 }
 
 export async function updateEnquiryStatus(id, status) {
   const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+  if (error) throw new ApiError(error.message)
+}
+
+export async function updateEnquiryNotes(id, notes) {
+  const { error } = await supabase.from('enquiries').update({ admin_notes: notes }).eq('id', id)
   if (error) throw new ApiError(error.message)
 }
