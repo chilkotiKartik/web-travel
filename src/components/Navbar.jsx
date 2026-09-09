@@ -4,6 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Container } from './ui/States'
 import { Button } from './ui/Button'
 import { useAuth } from '../context/AuthContext'
+import { useAdminActivityCount } from '../hooks/useAdminActivity'
 
 const LINKS = [
   { to: '/destinations', label: 'Destinations' },
@@ -20,6 +21,7 @@ function AccountMenu() {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const ref = useRef(null)
+  const adminActivity = useAdminActivityCount(user?.isAdmin)
 
   useEffect(() => {
     function onClick(e) {
@@ -44,9 +46,12 @@ function AccountMenu() {
         onClick={() => setMenuOpen((o) => !o)}
         aria-label="Account menu"
         aria-expanded={menuOpen}
-        className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500 font-display text-sm font-extrabold text-white transition-transform hover:scale-105"
+        className="relative flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500 font-display text-sm font-extrabold text-white transition-transform hover:scale-105"
       >
         {user.name.charAt(0).toUpperCase()}
+        {adminActivity > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex size-3.5 items-center justify-center rounded-full bg-red-500 ring-2 ring-white" />
+        )}
       </button>
       <AnimatePresence>
         {menuOpen && (
@@ -62,8 +67,17 @@ function AccountMenu() {
               My Bookings
             </Link>
             {user.isAdmin && (
-              <Link to="/admin" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-blue-600 hover:bg-mist-100">
+              <Link
+                to="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between px-4 py-2.5 text-sm font-medium text-blue-600 hover:bg-mist-100"
+              >
                 Admin Panel
+                {adminActivity > 0 && (
+                  <span className="flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {adminActivity > 9 ? '9+' : adminActivity}
+                  </span>
+                )}
               </Link>
             )}
             <button
