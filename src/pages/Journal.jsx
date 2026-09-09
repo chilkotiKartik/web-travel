@@ -4,12 +4,16 @@ import { Container, SkeletonGrid, ErrorState, EmptyState } from '../components/u
 import { Stagger, staggerItem, Reveal } from '../components/ui/Reveal'
 import { StoryCard } from '../components/StoryCard'
 import { SearchInput, FilterChip } from '../components/FilterBar'
+import { PageHero } from '../components/PageHero'
+import { images } from '../lib/images'
 import { useAsync } from '../hooks/useAsync'
 import { useDebounce } from '../hooks/useDebounce'
 import { fetchStories } from '../lib/api'
 import { storyCategories } from '../data/stories'
+import { useSeo } from '../components/Seo'
 
 export default function Journal() {
+  useSeo({ title: 'The Journal', description: 'Field notes from the trail — trek guides, gear lists, altitude advice and honest trip diaries written by the leaders who ran them.' })
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('')
   const debouncedQuery = useDebounce(query, 250)
@@ -31,15 +35,18 @@ export default function Journal() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-12 pt-32">
-        <div className="pointer-events-none absolute -left-16 top-0 size-72 rounded-full bg-blue-500/15 blur-3xl" />
-        <Container className="relative">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">The Journal</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
-            Field notes from the trail
-          </h1>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="The Journal"
+        tone="green"
+        title="Field notes from the trail"
+        subtitle="Gear that survived, altitude that didn't go to plan, and the honest version of what a Himalayan week actually feels like — written by the people who led the trip."
+        image={images.destination('kashmir', 1000)}
+        imageAlt="A Himalayan alpine lake and meadow"
+        facts={[
+          { value: '6', label: 'Long reads' },
+          { value: '4', label: 'Categories' },
+        ]}
+      />
 
       <section className="py-14 sm:py-20">
         <Container>

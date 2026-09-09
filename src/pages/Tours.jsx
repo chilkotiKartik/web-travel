@@ -9,8 +9,11 @@ import { Select } from '../components/ui/Field'
 import { useAsync } from '../hooks/useAsync'
 import { useDebounce } from '../hooks/useDebounce'
 import { fetchTours } from '../lib/api'
-import { categories, difficulties } from '../data/tours'
+import { PageHero } from '../components/PageHero'
+import { categories, difficulties, tours } from '../data/tours'
 import { destinations } from '../data/destinations'
+import { images } from '../lib/images'
+import { useSeo } from '../components/Seo'
 
 const SORTS = [
   { id: 'popular', label: 'Most Popular' },
@@ -37,6 +40,7 @@ const DURATIONS = [
 ]
 
 export default function Tours() {
+  useSeo({ title: 'Expeditions', description: 'Browse every Wayfare expedition by budget, duration and difficulty. Real dates, certified trek leaders and transparent pricing.' })
   const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState(params.get('q') || '')
   const [category, setCategory] = useState(params.get('category') || '')
@@ -107,15 +111,18 @@ export default function Tours() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-12 pt-32">
-        <div className="pointer-events-none absolute -left-16 top-0 size-72 rounded-full bg-blue-500/15 blur-3xl" />
-        <Container className="relative">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Expeditions</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
-            {activeDestination ? `Trips in ${activeDestination.name}` : 'Find your next trail'}
-          </h1>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Expeditions"
+        tone="green"
+        title={activeDestination ? `Trips in ${activeDestination.name}` : 'Find your next trail'}
+        subtitle="Filter by budget, length and difficulty — every trip below has real dates, a real leader and a real price."
+        image={images.destination(activeDestination?.slug || 'himachal-pradesh', 1000)}
+        imageAlt={activeDestination ? `${activeDestination.name} landscape` : 'A Himalayan trekking route'}
+        facts={[
+          { value: `${data?.length ?? tours.length}`, label: 'Expeditions live' },
+          { value: '4.8/5', label: 'Average rating' },
+        ]}
+      />
 
       <section className="py-14 sm:py-20">
         <Container>

@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 import { Container } from '../components/ui/States'
 import { Reveal } from '../components/ui/Reveal'
 import { Img } from '../components/ui/Img'
+import { PageHero } from '../components/PageHero'
 import { tours, categories } from '../data/tours'
 import { images } from '../lib/images'
+import { useSeo } from '../components/Seo'
 
 const CATEGORY_DETAIL = {
   Trekking: {
@@ -35,21 +37,21 @@ const CATEGORY_DETAIL = {
 }
 
 export default function Experiences() {
+  useSeo({ title: 'Experiences', description: 'Five ways to travel with Wayfare: trekking, road trips, backpacking, wildlife and snow expeditions — pick the pace that fits you.' })
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-14 pt-32">
-        <div className="pointer-events-none absolute -right-20 top-10 size-72 rounded-full bg-green-500/15 blur-3xl" />
-        <Container className="relative">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Experiences</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
-            Five ways to move through India
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-ink-500">
-            Every trip we run falls into one of five categories. Pick the pace that matches your fitness, time, and appetite
-            for discomfort.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Experiences"
+        tone="green"
+        title="Five ways to move through India"
+        subtitle="Every trip we run falls into one of five categories. Pick the pace that matches your fitness, time, and appetite for discomfort."
+        image={images.destination('spiti-valley', 1000)}
+        imageAlt="A cold-desert road through Spiti Valley"
+        facts={[
+          { value: '5', label: 'Trip styles' },
+          { value: `${tours.length}`, label: 'Live expeditions' },
+        ]}
+      />
 
       <section className="py-16 sm:py-20">
         <Container className="space-y-20">

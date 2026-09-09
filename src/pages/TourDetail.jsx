@@ -12,6 +12,7 @@ import { useAsync } from '../hooks/useAsync'
 import { fetchTour, fetchToursForDestination } from '../lib/api'
 import { getDestinationBySlug } from '../data/destinations'
 import { useCompare } from '../context/CompareContext'
+import { useSeo } from '../components/Seo'
 
 function formatPrice(price) {
   return `₹${price.toLocaleString('en-IN')}`
@@ -29,6 +30,11 @@ export default function TourDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { status, data: tour, error, reload } = useAsync(() => fetchTour(slug), [slug])
+  useSeo({
+    title: tour?.title,
+    description: tour ? `${tour.title} — ${tour.duration} days, ${tour.difficulty} grade, from ₹${tour.price.toLocaleString('en-IN')}. ${tour.overview.slice(0, 110)}` : undefined,
+    image: tour?.heroImage,
+  })
   const relatedQuery = useAsync(
     () => (tour ? fetchToursForDestination(tour.destinationSlug) : Promise.resolve([])),
     [tour?.destinationSlug]

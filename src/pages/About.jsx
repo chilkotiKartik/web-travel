@@ -7,8 +7,10 @@ import { TestimonialsSection } from '../components/TestimonialsSection'
 import { WhyChooseSection } from '../components/WhyChooseSection'
 import { team, stats } from '../data/misc'
 import { motion } from 'framer-motion'
+import { useSeo } from '../components/Seo'
 
 export default function About() {
+  useSeo({ title: 'About Us', description: 'Wayfare is built by trekkers, not tour operators — 42,000+ travellers, 220+ departures a year and 11 years in the Himalayas.' })
   return (
     <>
       <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-14 pt-32">

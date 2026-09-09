@@ -5,6 +5,7 @@ import { Field, Input, Textarea, Select } from '../components/ui/Field'
 import { Accordion } from '../components/ui/Accordion'
 import { submitContactMessage } from '../lib/api'
 import { faqs } from '../data/misc'
+import { useSeo } from '../components/Seo'
 
 const SUBJECTS = ['General enquiry', 'Trip customisation', 'Group booking', 'Partnership / press', 'Something else']
 
@@ -20,6 +21,7 @@ function validate(values) {
 }
 
 export default function Contact() {
+  useSeo({ title: 'Contact', description: 'Talk to the Wayfare team about a trek, a custom itinerary or a group departure. We reply within one business day.' })
   const [values, setValues] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')

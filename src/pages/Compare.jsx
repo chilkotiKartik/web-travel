@@ -5,6 +5,7 @@ import { Rating } from '../components/ui/Rating'
 import { tours } from '../data/tours'
 import { getDestinationBySlug } from '../data/destinations'
 import { useCompare } from '../context/CompareContext'
+import { useSeo } from '../components/Seo'
 
 function formatPrice(price) {
   return `₹${price.toLocaleString('en-IN')}`
@@ -21,6 +22,7 @@ const ROWS = [
 ]
 
 export default function Compare() {
+  useSeo({ title: 'Compare Trips', description: 'Compare Wayfare expeditions side by side on price, duration, difficulty, altitude and season.' })
   const { slugs, remove, clear } = useCompare()
   const navigate = useNavigate()
   const selected = slugs.map((s) => tours.find((t) => t.slug === s)).filter(Boolean)

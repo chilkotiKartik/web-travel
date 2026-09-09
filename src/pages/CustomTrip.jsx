@@ -5,6 +5,7 @@ import { Container } from '../components/ui/States'
 import { Field, Input, Select, Textarea } from '../components/ui/Field'
 import { submitEnquiry } from '../lib/api'
 import { destinations } from '../data/destinations'
+import { useSeo } from '../components/Seo'
 
 const STEPS = [
   'Destination',
@@ -27,6 +28,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const today = new Date().toISOString().split('T')[0]
 
 export default function CustomTrip() {
+  useSeo({ title: 'Custom Trip Planner', description: 'Build a fully personalised Himalayan itinerary — tell us your destination, dates, budget and style, and our trip designers take it from there.' })
   const [step, setStep] = useState(0)
   const [destination, setDestination] = useState('')
   const [tripStart, setTripStart] = useState('')

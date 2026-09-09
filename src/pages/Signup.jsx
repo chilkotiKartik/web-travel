@@ -5,10 +5,12 @@ import { Container } from '../components/ui/States'
 import { Field, Input } from '../components/ui/Field'
 import { useAuth } from '../context/AuthContext'
 import { AuthError } from '../lib/auth'
+import { useSeo } from '../components/Seo'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function Signup() {
+  useSeo({ title: 'Create Account', description: 'Create a Wayfare account to book expeditions and track your trips.' })
   const { signUp } = useAuth()
   const navigate = useNavigate()
 

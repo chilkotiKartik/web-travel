@@ -8,6 +8,7 @@ import { useAsync } from '../hooks/useAsync'
 import { fetchBookings } from '../lib/api'
 import { Img } from '../components/ui/Img'
 import { getTourBySlug } from '../data/tours'
+import { useSeo } from '../components/Seo'
 
 const dateFmt = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 
@@ -16,6 +17,7 @@ function formatPrice(price) {
 }
 
 export default function Account() {
+  useSeo({ title: 'My Account', description: 'Your Wayfare bookings and trip details.' })
   const { user, loading, logOut } = useAuth()
   const navigate = useNavigate()
   const { status, data, error, reload } = useAsync(fetchBookings, [user?.id])

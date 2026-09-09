@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Img } from './ui/Img'
 import { TiltCard } from './ui/TiltCard'
 
-export function DestinationCard({ destination, className = '', priority = false }) {
+export function DestinationCard({ destination, className = '', priority = false, aspect = 'aspect-[4/5]' }) {
   return (
     <TiltCard className={className} maxTilt={4}>
     <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-green-500 via-blue-500 to-green-500 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-40" />
@@ -13,7 +13,7 @@ export function DestinationCard({ destination, className = '', priority = false 
           src={destination.heroImage}
           alt={destination.name}
           eager={priority}
-          className="aspect-[4/5]"
+          className={`${aspect} h-full`}
           imgClassName="transition-transform duration-700 group-hover:scale-[1.06]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />

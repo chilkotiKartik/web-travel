@@ -9,6 +9,7 @@ import { tours } from '../data/tours'
 import { getDestinationBySlug } from '../data/destinations'
 import { getOfferByCode, evaluateOffer } from '../data/offers'
 import { useAuth } from '../context/AuthContext'
+import { useSeo } from '../components/Seo'
 
 const STEPS = ['Trip', 'Details', 'You', 'Review']
 
@@ -20,6 +21,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const today = new Date().toISOString().split('T')[0]
 
 export default function Plan() {
+  useSeo({ title: 'Plan a Trip', description: 'Book your Wayfare expedition in four short steps — pick a trip, choose dates, add travellers and confirm.' })
   const [params] = useSearchParams()
   const preselectedSlug = params.get('tour')
   const preselectedCode = params.get('code')

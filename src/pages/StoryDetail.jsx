@@ -7,12 +7,14 @@ import { Img } from '../components/ui/Img'
 import { StoryCard } from '../components/StoryCard'
 import { useAsync } from '../hooks/useAsync'
 import { fetchStory, fetchStories } from '../lib/api'
+import { useSeo } from '../components/Seo'
 
 const dateFmt = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
 
 export default function StoryDetail() {
   const { slug } = useParams()
   const { status, data: story, error, reload } = useAsync(() => fetchStory(slug), [slug])
+  useSeo({ title: story?.title, description: story?.excerpt, image: story?.heroImage })
   const allStories = useAsync(fetchStories, [])
 
   if (status === 'loading') {

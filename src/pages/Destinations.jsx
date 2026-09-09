@@ -5,13 +5,17 @@ import { Container, SkeletonGrid, ErrorState, EmptyState } from '../components/u
 import { Stagger, staggerItem } from '../components/ui/Reveal'
 import { DestinationCard } from '../components/DestinationCard'
 import { SearchInput, FilterChip } from '../components/FilterBar'
+import { PageHero } from '../components/PageHero'
 import { useAsync } from '../hooks/useAsync'
 import { useDebounce } from '../hooks/useDebounce'
 import { fetchDestinations } from '../lib/api'
+import { images } from '../lib/images'
+import { useSeo } from '../components/Seo'
 
 const ALL_TAGS = ['Mountains', 'Desert', 'Rivers', 'Beaches', 'Culture', 'Trekking', 'Snow', 'Offbeat', 'Beginner Friendly', 'Extreme']
 
 export default function Destinations() {
+  useSeo({ title: 'Destinations', description: 'Ten Indian regions to explore with Wayfare — Himalayan passes, cold deserts, backwaters and coastline, each with real departures and local trek leaders.' })
   const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState(params.get('q') || '')
   const [activeTag, setActiveTag] = useState(params.get('tag') || '')
@@ -47,15 +51,19 @@ export default function Destinations() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-100/70 via-white to-white pb-14 pt-32">
-        <div className="pointer-events-none absolute -right-20 top-0 size-72 rounded-full bg-green-500/15 blur-3xl" />
-        <Container className="relative">
-          <p className="text-sm font-semibold uppercase tracking-wide text-green-600">Destinations</p>
-          <h1 className="text-balance mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-6xl">
-            Ten regions. Every kind of landscape.
-          </h1>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Destinations"
+        tone="green"
+        title="Ten regions. Every kind of landscape."
+        subtitle="From cold deserts at 14,000ft to root bridges in the wettest place on earth — pick the terrain, we'll handle the logistics."
+        image={images.destination('ladakh', 1000)}
+        imageAlt="A high-altitude Ladakh landscape"
+        facts={[
+          { value: '10', label: 'Regions covered' },
+          { value: '220+', label: 'Departures a year' },
+          { value: '11 yrs', label: 'On the ground' },
+        ]}
+      />
 
       <section className="py-14 sm:py-20">
         <Container>
@@ -102,13 +110,27 @@ export default function Destinations() {
               />
             )}
 
+            {/* Editorial mosaic: a repeating 5-card rhythm (two wide, three tall) that
+                tiles a 6-column grid exactly, so rows never end in an orphan card. */}
             {status === 'success' && filtered.length > 0 && (
-              <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((d) => (
-                  <motion.div key={d.id} variants={staggerItem}>
-                    <DestinationCard destination={d} className="h-full" />
-                  </motion.div>
-                ))}
+              <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+                {filtered.map((d, i) => {
+                  const wide = i % 5 < 2
+                  return (
+                    <motion.div
+                      key={d.id}
+                      variants={staggerItem}
+                      className={wide ? 'lg:col-span-3' : 'lg:col-span-2'}
+                    >
+                      <DestinationCard
+                        destination={d}
+                        priority={i < 2}
+                        aspect={wide ? 'aspect-[16/10]' : 'aspect-[4/5]'}
+                        className="h-full"
+                      />
+                    </motion.div>
+                  )
+                })}
               </Stagger>
             )}
           </div>

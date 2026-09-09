@@ -4,6 +4,7 @@ import { OfferCard } from '../components/OfferCard'
 import { Accordion } from '../components/ui/Accordion'
 import { offers } from '../data/offers'
 import { motion } from 'framer-motion'
+import { useSeo } from '../components/Seo'
 
 const TERMS = [
   {
@@ -25,6 +26,7 @@ const TERMS = [
 ]
 
 export default function Offers() {
+  useSeo({ title: 'Offers & Discount Codes', description: 'Live Wayfare discount codes that actually work in our booking flow — festive sales, group discounts and early-bird pricing.' })
   return (
     <>
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-500 to-green-500 pb-20 pt-32 text-white">

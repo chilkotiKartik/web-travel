@@ -8,6 +8,7 @@ import { Img } from '../components/ui/Img'
 import { TourCard } from '../components/TourCard'
 import { useAsync } from '../hooks/useAsync'
 import { fetchDestination, fetchToursForDestination } from '../lib/api'
+import { useSeo } from '../components/Seo'
 
 function RouteMap({ destination }) {
   return (
@@ -35,6 +36,11 @@ function RouteMap({ destination }) {
 export default function DestinationDetail() {
   const { slug } = useParams()
   const { status, data: destination, error, reload } = useAsync(() => fetchDestination(slug), [slug])
+  useSeo({
+    title: destination?.name,
+    description: destination ? `${destination.name}, ${destination.region} — ${destination.tagline}. Best season: ${destination.bestSeason}.` : undefined,
+    image: destination?.heroImage,
+  })
   const toursQuery = useAsync(() => fetchToursForDestination(slug), [slug])
 
   if (status === 'loading') {
