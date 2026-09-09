@@ -186,3 +186,44 @@ export async function subscribeNewsletter(email) {
   }
   return { alreadySubscribed: false, email }
 }
+
+// ---------- Admin reads (RLS only returns rows to admins; empty array otherwise) ----------
+
+export async function fetchAllBookings() {
+  const { data, error } = await supabase.from('bookings').select('*').order('created_at', { ascending: false })
+  if (error) throw new ApiError(error.message)
+  return data.map((b) => ({
+    id: b.id,
+    createdAt: b.created_at,
+    status: b.status,
+    tourSlug: b.tour_slug,
+    tourTitle: b.tour_title,
+    destination: b.destination,
+    date: b.trip_date,
+    travelers: b.travelers,
+    total: b.total,
+    discount: b.discount,
+    promoCode: b.promo_code,
+    contact: { name: b.contact_name, email: b.contact_email, phone: b.contact_phone },
+  }))
+}
+
+export async function fetchAllContactMessages() {
+  const { data, error } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false })
+  if (error) throw new ApiError(error.message)
+  return data.map((m) => ({
+    id: m.id,
+    createdAt: m.created_at,
+    name: m.name,
+    email: m.email,
+    phone: m.phone,
+    subject: m.subject,
+    message: m.message,
+  }))
+}
+
+export async function fetchAllNewsletterSubscribers() {
+  const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false })
+  if (error) throw new ApiError(error.message)
+  return data.map((s) => ({ id: s.id, email: s.email, createdAt: s.created_at }))
+}

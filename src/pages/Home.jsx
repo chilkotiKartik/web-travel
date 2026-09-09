@@ -12,6 +12,7 @@ import { StoryCard } from '../components/StoryCard'
 import { TestimonialsSection } from '../components/TestimonialsSection'
 import { NewsletterForm } from '../components/NewsletterForm'
 import { CircularIconRow } from '../components/CircularIconRow'
+import { DailyHighlight } from '../components/DailyHighlight'
 import { destinations } from '../data/destinations'
 import { tours, categories } from '../data/tours'
 import { stories } from '../data/stories'
@@ -190,6 +191,13 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+        </Container>
+      </section>
+
+      {/* Daily highlight */}
+      <section className="py-10 sm:py-14">
+        <Container>
+          <DailyHighlight />
         </Container>
       </section>
 

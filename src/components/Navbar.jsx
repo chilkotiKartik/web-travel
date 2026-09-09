@@ -61,6 +61,11 @@ function AccountMenu() {
             <Link to="/account" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-ink-700 hover:bg-mist-100">
               My Bookings
             </Link>
+            {user.isAdmin && (
+              <Link to="/admin" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-blue-600 hover:bg-mist-100">
+                Admin Panel
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => {
